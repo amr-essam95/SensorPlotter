@@ -4,6 +4,8 @@ from PyQt5.QtGui import QColor
 import sys
 sys.path.append(".")
 from styler import Styler
+from settings_frame import SettingsFrame
+from plotting_frame import PlottingFrame
 
 class MainWindow(QtWidgets.QMainWindow): 
     def __init__(self): 
@@ -28,14 +30,14 @@ class MainWindow(QtWidgets.QMainWindow):
   
     def createSettingsFrame(self): 
   
-        self.settingsFrame = QtWidgets.QFrame(self)
-        self.addShadow(self.settingsFrame)
+        self.settingsFrame = SettingsFrame()
+        # self.styler.addShadow(self.settingsFrame)
         self.settingsFrame.setStyleSheet(self.styler.roundedStyle)
 
     def createPlottingAreaWidget(self): 
   
-        self.plottingAreaFrame = QtWidgets.QFrame(self)
-        self.addShadow(self.plottingAreaFrame)
+        self.plottingAreaFrame = PlottingFrame()
+        self.styler.addShadow(self.plottingAreaFrame)
         self.plottingAreaFrame.setStyleSheet(self.styler.roundedStyle)
 
     def manageLayouts(self):
@@ -49,13 +51,3 @@ class MainWindow(QtWidgets.QMainWindow):
         mainFrame = QtWidgets.QFrame(self)
         mainFrame.setLayout(mainLayout)
         self.setCentralWidget(mainFrame)
-        
-
-    def addShadow(self, widget):
-        
-        effect = QtWidgets.QGraphicsDropShadowEffect()
-        effect.setBlurRadius(8)
-        effect.setXOffset(0)
-        effect.setYOffset(0)
-        effect.setColor(QColor(65,88,134))
-        widget.setGraphicsEffect(effect);  
