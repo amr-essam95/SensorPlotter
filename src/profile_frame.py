@@ -6,6 +6,11 @@ sys.path.append(".")
 from styler import Styler
 import os
 
+import matplotlib
+matplotlib.use('Qt5Agg')
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT as NavigationToolbar
+from matplotlib.figure import Figure
+
 class ProfileFrame(QtWidgets.QFrame): 
 	def __init__(self, parent=None): 
 		super().__init__(parent)
@@ -61,8 +66,17 @@ class ProfileFrame(QtWidgets.QFrame):
 		self.profileButtonsFrame.setLayout(profileButtonsLayout)
 
 	def createProfilePlot(self):
-		
+
+		sc = MplCanvas(self, width=5, height=4, dpi=100)
+		sc.axes.plot([0,1,2,3,4], [10,1,20,3,40])
+		sc.axes.set_ylabel('Current (mA)', fontsize=10)
+		sc.axes.set_xlabel('Gait cycle (%)', fontsize=10)
+
+		toolbar = NavigationToolbar(sc, self)
+
 		profilePlotLayout = QtWidgets.QVBoxLayout()
+		# profilePlotLayout.addWidget(toolbar)
+		profilePlotLayout.addWidget(sc)
 
 		self.profilePlotFrame = QtWidgets.QFrame()
 		self.profilePlotFrame.setLayout(profilePlotLayout)
@@ -83,6 +97,11 @@ class ProfileFrame(QtWidgets.QFrame):
 		mainLayout.addWidget(self.profilePlotFrame, 2)
 		self.setLayout(mainLayout)
 
+	def plotProfileFile(self, profileFilePath):
+		
+		print ("will parse {}".format(profileFilePath))
+		
+
 	# Slots
 
 	def onSetProfileClicked(self):
@@ -95,3 +114,12 @@ class ProfileFrame(QtWidgets.QFrame):
 		profileFilePath = profileFileTuple[0]
 		if profileFilePath and os.path.exists(profileFilePath):
 			self.profileLineEdit.setText(profileFilePath)
+			self.plotProfileFile(profileFilePath)
+
+
+class MplCanvas(FigureCanvasQTAgg):
+
+	def __init__(self, parent=None, width=5, height=4, dpi=100):
+		fig = Figure(figsize=(width, height), dpi=dpi)
+		self.axes = fig.add_subplot(111)
+		super(MplCanvas, self).__init__(fig)

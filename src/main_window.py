@@ -45,8 +45,8 @@ class MainWindow(QtWidgets.QMainWindow):
         mainLayout = QtWidgets.QVBoxLayout()
         mainLayout.setContentsMargins(10,10,10,10)
         mainLayout.setSpacing(10)
-        mainLayout.addWidget(self.settingsFrame,1)
-        mainLayout.addWidget(self.plottingAreaFrame,4)
+        mainLayout.addWidget(self.settingsFrame,2)
+        mainLayout.addWidget(self.plottingAreaFrame,5)
 
         mainFrame = QtWidgets.QFrame(self)
         mainFrame.setLayout(mainLayout)
