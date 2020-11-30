@@ -28,9 +28,42 @@ class Styler:
             }
         """
 
+        self.browseLineEditStyle = """
+            QLineEdit {
+                border-radius: 0px;
+                height: 30px;
+                font-size: 11px;
+            }
+            QLineEdit::disabled {
+                color: black;
+            }
+        """
+
+        self.browseLineEditFrame = """
+            QFrame {
+                border-bottom: 1px solid rgb(65,88,134);
+                border-radius: 0px;
+            }
+        """
+
         self.labelStyle = """
             QLabel {
                 font-size: 12px;
+            }
+        """
+
+        self.seperatorStyle = """
+            QFrame {
+                background-color: rgb(65,88,134);
+            }
+        """
+
+        self.browseButtonStyle = """
+            QPushButton {
+                border-bottom: 1px solid rgb(65,88,134);
+                border-radius: 0px;
+                height: 30px;
+                font-size: 11px;
             }
         """
 
