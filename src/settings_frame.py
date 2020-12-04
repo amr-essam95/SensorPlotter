@@ -5,6 +5,7 @@ import sys
 sys.path.append(".")
 from styler import Styler
 from profile_frame import ProfileFrame
+from connection_utils import SocketCommunicator
 
 class SettingsFrame(QtWidgets.QFrame): 
 	def __init__(self, parent=None): 
@@ -19,6 +20,8 @@ class SettingsFrame(QtWidgets.QFrame):
 		self.magnitudeRxLabel = ""
 		self.participantIdLineEdit = ""
 
+		self.socketCommunicator = SocketCommunicator()
+
 		self.styler = Styler()
 
 		self.createRunningSettings()
@@ -26,6 +29,7 @@ class SettingsFrame(QtWidgets.QFrame):
 		self.createSlidersSettings()
 		self.createProfileSettings()
 		self.manageLayouts()
+
 
 	def createRunningSettings(self):
 
@@ -140,11 +144,13 @@ class SettingsFrame(QtWidgets.QFrame):
 
 	def onConnectButtonClicked(self):
 
-		print ("running button clicked")
+		print ("connect button clicked")
+		self.socketCommunicator.connect()
 
 	def onStreamButtonClicked(self):
 
 		print ("stream button clicked")
+		self.socketCommunicator.sendData("hello amr")
 
 	def onSetMarkerButtonClicked(self):
 

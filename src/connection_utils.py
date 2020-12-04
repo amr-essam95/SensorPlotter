@@ -10,13 +10,41 @@ This is a temporary script file.
 import socket
 import struct
 
-HOST = '192.168.7.2'  # The server's hostname or IP address
-PORT = 6666        # The port used by the server
+class SocketCommunicator():
 
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    s.connect((HOST, PORT))
-    while True:
-        data = s.recv(56)
-        if not data: break
-        print (data)
-        # print(struct.unpack("iiiiiiihhhhhhhhhhBBBhh",data))
+    def __init__(self):
+
+        # self.hostname = '192.168.7.2'
+        self.hostname = '127.0.0.1'
+        self.port = 6666
+        self.socketConnection = ''
+
+    def connect(self):
+
+        self.socketConnection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socketConnection.connect((self.hostname, self.port))
+
+    def sendData(self, data):
+        
+        var = struct.pack('hhl', 5, 10, 15)
+        self.socketConnection.sendall(var)
+        self.receiveData()
+
+    def receiveData(self):
+
+        while True:
+            data = self.socketConnection.recv(56)
+            if not data: break
+            print (data)
+
+
+
+
+# with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+#     s.connect((HOST, PORT))
+#     s.sendall(b'Hello, world')
+#     while True:
+#         data = s.recv(56)
+#         if not data: break
+#         print (data)
+#         # print(struct.unpack("iiiiiiihhhhhhhhhhBBBhh",data))
