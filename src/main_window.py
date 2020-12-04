@@ -31,13 +31,11 @@ class MainWindow(QtWidgets.QMainWindow):
     def createSettingsFrame(self): 
   
         self.settingsFrame = SettingsFrame()
-        # self.styler.addShadow(self.settingsFrame)
         self.settingsFrame.setStyleSheet(self.styler.roundedStyle)
 
     def createPlottingAreaWidget(self): 
   
         self.plottingAreaFrame = PlottingFrame()
-        self.styler.addShadow(self.plottingAreaFrame)
         self.plottingAreaFrame.setStyleSheet(self.styler.roundedStyle)
 
     def manageLayouts(self):

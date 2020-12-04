@@ -6,10 +6,10 @@ sys.path.append(".")
 from styler import Styler
 import os
 
-import matplotlib
-matplotlib.use('Qt5Agg')
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT as NavigationToolbar
-from matplotlib.figure import Figure
+from pyqtgraph import PlotWidget, plot
+import pyqtgraph as pg
+
+import csv
 
 class ProfileFrame(QtWidgets.QFrame): 
 	def __init__(self, parent=None): 
@@ -18,6 +18,7 @@ class ProfileFrame(QtWidgets.QFrame):
 		self.profileButtonsFrame = ""
 		self.profilePlotFrame = ""
 		self.profileLineEdit = ""
+		self.profilePlot = ""
 
 		self.styler = Styler()
 
@@ -67,16 +68,27 @@ class ProfileFrame(QtWidgets.QFrame):
 
 	def createProfilePlot(self):
 
-		sc = MplCanvas(self, width=5, height=4, dpi=100)
-		sc.axes.plot([0,1,2,3,4], [10,1,20,3,40])
-		sc.axes.set_ylabel('Current (mA)', fontsize=10)
-		sc.axes.set_xlabel('Gait cycle (%)', fontsize=10)
+		self.profilePlot = pg.PlotWidget()
 
-		toolbar = NavigationToolbar(sc, self)
+		blackColor = (0,0,0)
+
+		self.profilePlot.setBackground('w')
+		self.profilePlot.setTitle("<span style=\"color:black; font-size:30==40pt\">Profile Plot</span>")
+		self.profilePlot.setTitle("Profile Plot", color=blackColor)
+
+		styles = {'color':'rgba(0,0,0,1)', 'font-size':'15px'}
+		self.profilePlot.getAxis('left').setPen(color=blackColor)
+		self.profilePlot.getAxis('bottom').setPen(color=blackColor)
+
+		self.profilePlot.getAxis('left').setTextPen(color=blackColor)
+		self.profilePlot.getAxis('bottom').setTextPen(color=blackColor) 
+
+		self.profilePlot.setLabel('left', 'Current (mA)', **styles)
+		self.profilePlot.setLabel('bottom', 'Gait cycle (%)', **styles)
 
 		profilePlotLayout = QtWidgets.QVBoxLayout()
 		# profilePlotLayout.addWidget(toolbar)
-		profilePlotLayout.addWidget(sc)
+		profilePlotLayout.addWidget(self.profilePlot)
 
 		self.profilePlotFrame = QtWidgets.QFrame()
 		self.profilePlotFrame.setLayout(profilePlotLayout)
@@ -99,8 +111,16 @@ class ProfileFrame(QtWidgets.QFrame):
 
 	def plotProfileFile(self, profileFilePath):
 		
-		print ("will parse {}".format(profileFilePath))
+		f = open(profileFilePath, "r")
+		fileContent = f.read()
+		profileStrList = fileContent.split(',')
+		profileIntList = [int(i) for i in profileStrList] 
 		
+		x = range(0, 100, 1)
+
+		blackPen = pg.mkPen(color=(0,0,0))
+		self.profilePlot.clear()
+		self.profilePlot.plot(x, profileIntList, pen=blackPen)
 
 	# Slots
 
@@ -115,11 +135,3 @@ class ProfileFrame(QtWidgets.QFrame):
 		if profileFilePath and os.path.exists(profileFilePath):
 			self.profileLineEdit.setText(profileFilePath)
 			self.plotProfileFile(profileFilePath)
-
-
-class MplCanvas(FigureCanvasQTAgg):
-
-	def __init__(self, parent=None, width=5, height=4, dpi=100):
-		fig = Figure(figsize=(width, height), dpi=dpi)
-		self.axes = fig.add_subplot(111)
-		super(MplCanvas, self).__init__(fig)

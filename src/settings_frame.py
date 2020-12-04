@@ -159,5 +159,7 @@ class SettingsFrame(QtWidgets.QFrame):
 		self.magnitudeRxLabel.setText("Magnitude Scaling Rx : {}".format(value))
 
 	def onLogButtonClicked(self):
-
-		print ("log button clicked")
+		participantId = self.participantIdLineEdit.text().strip()
+		logFile = open('log_{}'.format(participantId), 'w')
+		logFile.write("{}".format(participantId))
+		
