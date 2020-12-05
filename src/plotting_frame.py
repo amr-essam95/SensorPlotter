@@ -6,7 +6,7 @@ sys.path.append(".")
 from styler import Styler
 
 class PlottingFrame(QtWidgets.QFrame): 
-	def __init__(self, parent=None): 
+	def __init__(self, socketController, parent=None): 
 		super().__init__()
 
 		self.anglePlotsFrame = ""
@@ -19,6 +19,8 @@ class PlottingFrame(QtWidgets.QFrame):
 		self.userFrame = ""
 
 		self.styler = Styler()
+
+		self.socketController = socketController
 
 		self.createAnglePlotsFrame()
 		self.createAnalogPlotsFrame()
@@ -96,12 +98,14 @@ class PlottingFrame(QtWidgets.QFrame):
 		self.runButton.clicked.disconnect(self.onRunButtonClicked)
 		self.runButton.setStyleSheet(self.styler.pauseButtonStyle)
 		self.runButton.clicked.connect(self.onPauseButtonClicked)
+		self.socketController.enableStateChanged(1)
 
 	def onPauseButtonClicked(self):
 
 		self.runButton.clicked.disconnect(self.onPauseButtonClicked)
 		self.runButton.setStyleSheet(self.styler.playButtonStyle)
 		self.runButton.clicked.connect(self.onRunButtonClicked)
+		self.socketController.enableStateChanged(0)
 
 	def setSyncLabelState(self, state):
 		if state == True:

@@ -6,6 +6,7 @@ sys.path.append(".")
 from styler import Styler
 from settings_frame import SettingsFrame
 from plotting_frame import PlottingFrame
+from socket_controller import SocketController
 
 class MainWindow(QtWidgets.QMainWindow): 
     def __init__(self): 
@@ -15,6 +16,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.plottingAreaFrame = ""
         
         self.styler = Styler()
+
+        self.socketController = SocketController(self)
   
         # setting title 
         self.setWindowTitle("Sensor Plotter") 
@@ -30,12 +33,12 @@ class MainWindow(QtWidgets.QMainWindow):
   
     def createSettingsFrame(self): 
   
-        self.settingsFrame = SettingsFrame(self)
+        self.settingsFrame = SettingsFrame(self.socketController, self)
         self.settingsFrame.setStyleSheet(self.styler.roundedStyle)
 
     def createPlottingAreaWidget(self): 
   
-        self.plottingAreaFrame = PlottingFrame()
+        self.plottingAreaFrame = PlottingFrame(self.socketController)
         self.plottingAreaFrame.setStyleSheet(self.styler.roundedStyle)
 
     def manageLayouts(self):

@@ -12,15 +12,18 @@ import pyqtgraph as pg
 import csv
 
 class ProfileFrame(QtWidgets.QFrame): 
-	def __init__(self, parent=None): 
+	def __init__(self, socketController, parent=None): 
 		super().__init__(parent)
 
 		self.profileButtonsFrame = ""
 		self.profilePlotFrame = ""
 		self.profileLineEdit = ""
 		self.profilePlot = ""
+		self.profileIntList = []
 
 		self.styler = Styler()
+
+		self.socketController = socketController
 
 		self.createProfileButtons()
 		self.createProfilePlot()
@@ -114,19 +117,20 @@ class ProfileFrame(QtWidgets.QFrame):
 		f = open(profileFilePath, "r")
 		fileContent = f.read()
 		profileStrList = fileContent.split(',')
-		profileIntList = [int(i) for i in profileStrList] 
+		self.profileIntList = [int(i) for i in profileStrList] 
 		
 		x = range(0, 100, 1)
 
 		blackPen = pg.mkPen(color=(0,0,0))
 		self.profilePlot.clear()
-		self.profilePlot.plot(x, profileIntList, pen=blackPen)
+		self.profilePlot.plot(x, self.profileIntList, pen=blackPen)
 
 	# Slots
 
 	def onSetProfileClicked(self):
 
 		print("setProfile clicked")
+		self.socketController.desiredForceProfileChanged(self.profileIntList)
 
 	def onBrowseButtonClicked(self):
 

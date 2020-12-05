@@ -8,8 +8,8 @@ from profile_frame import ProfileFrame
 from connection_utils import SocketCommunicator
 
 class SettingsFrame(QtWidgets.QFrame): 
-	streamData = QtCore.pyqtSignal()
-	def __init__(self, parent=None): 
+	
+	def __init__(self, socketController, parent=None): 
 		super().__init__()
 
 		self.runningSettingsFrame = ""
@@ -21,35 +21,17 @@ class SettingsFrame(QtWidgets.QFrame):
 		self.magnitudeRxLabel = ""
 		self.participantIdLineEdit = ""
 
-		# self.threadpool = QtCore.QThreadPool()
-		# print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
-
-		self.socketCommunicator = SocketCommunicator()
-		self.thread = QtCore.QThread(self)
-		self.thread.setTerminationEnabled(True)
-		self.socketCommunicator.moveToThread(self.thread)
-
-		parent.destroyed.connect(self.onParentDestroyed)
-
-		self.streamData.connect(self.socketCommunicator.receiveData)
-		self.thread.start()
+		self.markerState = 0
 
 		self.styler = Styler()
+
+		self.socketController = socketController
 
 		self.createRunningSettings()
 		self.createLoggingSettings()
 		self.createSlidersSettings()
 		self.createProfileSettings()
 		self.manageLayouts()
-
-	def onParentDestroyed(self):
-		print ("will delete")
-
-		self.socketCommunicator.deleteLater()
-		self.socketCommunicator = None
-		self.thread.terminate()
-		self.thread = None
-
 
 	def createRunningSettings(self):
 
@@ -145,7 +127,7 @@ class SettingsFrame(QtWidgets.QFrame):
 
 	def createProfileSettings(self):
 
-		self.profileSettingsFrame = ProfileFrame()
+		self.profileSettingsFrame = ProfileFrame(self.socketController)
 		self.styler.addShadow(self.profileSettingsFrame)
 
 	def manageLayouts(self):
@@ -165,30 +147,37 @@ class SettingsFrame(QtWidgets.QFrame):
 	def onConnectButtonClicked(self):
 
 		print ("connect button clicked")
-		self.socketCommunicator.connect()
+		self.socketController.startConnection()
 
 	def onStreamButtonClicked(self):
 
 		print ("stream button clicked")
-		# self.threadpool.start(self.socketCommunicator)
-		self.streamData.emit()
+		self.socketController.startStreaming()
 
 
 	def onSetMarkerButtonClicked(self):
 
 		print ("set marker button clicked")
-		self.socketCommunicator.sendData("hello amr")
+		if self.markerState == 1:
+			self.markerState = 0
+		else:
+			self.markerState = 1
+		self.socketController.markerStateChanged(self.markerState)
 
 	def magnitudeLxSliderValueChanged(self, value):
 
 		self.magnitudeLxLabel.setText("Magnitude Scaling Lx : {}".format(value))
+		self.socketController.magnitudeScalingLXChanged(value)
 
 	def magnitudeRxSliderValueChanged(self, value):
 
 		self.magnitudeRxLabel.setText("Magnitude Scaling Rx : {}".format(value))
+		self.socketController.magnitudeScalingRXChanged(value)
 
 	def onLogButtonClicked(self):
 		participantId = self.participantIdLineEdit.text().strip()
 		logFile = open('log_{}'.format(participantId), 'w')
 		logFile.write("{}".format(participantId))
+
+		self.socketController.sendData("amr")
 		
