@@ -1,6 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 import sys
+import struct
 
 sys.path.append(".")
 from connection_utils import SocketCommunicator
@@ -41,8 +42,8 @@ class SocketController(QtCore.QObject):
 		self.socketCommunicator.connect()
 
 	def sendData(self, data):
-
-		self.socketCommunicator.sendData(data)
+		var = struct.pack('hhl', 5, 10, 15)
+		self.socketCommunicator.sendData(var)
 
 	def startStreaming(self):
 
