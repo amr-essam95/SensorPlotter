@@ -8,6 +8,7 @@ from profile_frame import ProfileFrame
 from connection_utils import SocketCommunicator
 
 class SettingsFrame(QtWidgets.QFrame): 
+	streamData = QtCore.pyqtSignal()
 	def __init__(self, parent=None): 
 		super().__init__()
 
@@ -20,7 +21,18 @@ class SettingsFrame(QtWidgets.QFrame):
 		self.magnitudeRxLabel = ""
 		self.participantIdLineEdit = ""
 
+		# self.threadpool = QtCore.QThreadPool()
+		# print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
+
 		self.socketCommunicator = SocketCommunicator()
+		self.thread = QtCore.QThread(self)
+		self.thread.setTerminationEnabled(True)
+		self.socketCommunicator.moveToThread(self.thread)
+
+		parent.destroyed.connect(self.onParentDestroyed)
+
+		self.streamData.connect(self.socketCommunicator.receiveData)
+		self.thread.start()
 
 		self.styler = Styler()
 
@@ -29,6 +41,14 @@ class SettingsFrame(QtWidgets.QFrame):
 		self.createSlidersSettings()
 		self.createProfileSettings()
 		self.manageLayouts()
+
+	def onParentDestroyed(self):
+		print ("will delete")
+
+		self.socketCommunicator.deleteLater()
+		self.socketCommunicator = None
+		self.thread.terminate()
+		self.thread = None
 
 
 	def createRunningSettings(self):
@@ -150,11 +170,14 @@ class SettingsFrame(QtWidgets.QFrame):
 	def onStreamButtonClicked(self):
 
 		print ("stream button clicked")
-		self.socketCommunicator.sendData("hello amr")
+		# self.threadpool.start(self.socketCommunicator)
+		self.streamData.emit()
+
 
 	def onSetMarkerButtonClicked(self):
 
 		print ("set marker button clicked")
+		self.socketCommunicator.sendData("hello amr")
 
 	def magnitudeLxSliderValueChanged(self, value):
 

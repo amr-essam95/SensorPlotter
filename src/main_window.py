@@ -30,7 +30,7 @@ class MainWindow(QtWidgets.QMainWindow):
   
     def createSettingsFrame(self): 
   
-        self.settingsFrame = SettingsFrame()
+        self.settingsFrame = SettingsFrame(self)
         self.settingsFrame.setStyleSheet(self.styler.roundedStyle)
 
     def createPlottingAreaWidget(self): 
