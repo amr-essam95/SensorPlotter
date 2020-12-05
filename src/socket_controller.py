@@ -8,7 +8,9 @@ from connection_utils import SocketCommunicator
 
 
 class SocketController(QtCore.QObject):
+
 	streamData = QtCore.pyqtSignal()
+
 	def __init__(self, parent=None):
 		super(SocketController, self).__init__(parent)
 
@@ -32,7 +34,6 @@ class SocketController(QtCore.QObject):
 	def onParentDestroyed(self):
 		print ("will delete")
 
-		# self.socketCommunicator.deleteLater()
 		self.socketCommunicator = None
 		self.thread.terminate()
 		self.thread = None

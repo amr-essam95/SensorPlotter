@@ -1,5 +1,6 @@
 import socket
 import struct
+import random
 
 HOST = '127.0.0.1'  # Standard loopback interface address (localhost)
 PORT = 6666        # Port to listen on (non-privileged ports are > 1023)
@@ -14,7 +15,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             data = conn.recv(1024)
             # print("received data {}".format(data))
             if not data:
-                break
+                continue
             print(struct.unpack("?BB?100HHH",data))
             print("Finished Parsing.\n\n")
 
@@ -35,11 +36,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             analog1 = 20000
             analog2 = 40000
             analog3 = 60000
-            syncIn = 1
-            syncOut = 0
-            usrButton = 1
-            leftEnable = 0
-            rightEnable = 1
+            syncIn = random.randint(0,1)
+            syncOut = random.randint(0,1)
+            usrButton = random.randint(0,1)
+            leftEnable = random.randint(0,1)
+            rightEnable = random.randint(0,1)
             dummy1 = 0
             dummy2 = 0
 

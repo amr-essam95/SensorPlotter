@@ -5,14 +5,14 @@ import struct
 
 class SocketCommunicator(QtCore.QObject):
 
-	thighDataReady = QtCore.pyqtSignal()
-	shankDataReady = QtCore.pyqtSignal()
-	currentDataReady = QtCore.pyqtSignal()
-	analog0DataReady = QtCore.pyqtSignal()
-	analog1DataReady = QtCore.pyqtSignal()
-	analog2DataReady = QtCore.pyqtSignal()
-	analog3DataReady = QtCore.pyqtSignal()
-	dataLabelReady = QtCore.pyqtSignal()
+	shankDataReady = QtCore.pyqtSignal(int, int)
+	thighDataReady = QtCore.pyqtSignal(int, int, int)
+	currentDataReady = QtCore.pyqtSignal(int, int, int, int)
+	analog0DataReady = QtCore.pyqtSignal(int)
+	analog1DataReady = QtCore.pyqtSignal(int)
+	analog2DataReady = QtCore.pyqtSignal(int)
+	analog3DataReady = QtCore.pyqtSignal(int)
+	labelDataReady = QtCore.pyqtSignal(bool, bool)
 
 	def __init__(self, parent=None):
 		super(SocketCommunicator, self).__init__(parent)
@@ -43,6 +43,14 @@ class SocketCommunicator(QtCore.QObject):
 			data = self.socketConnection.recv(60)
 			if not data: break
 			structList = struct.unpack("iiiiiiihhhhhhHHHHBBBhhhh",data)
+			self.shankDataReady.emit(structList[2], structList[3])
+			self.thighDataReady.emit(structList[4], structList[5], structList[6])
+			self.currentDataReady.emit(structList[9], structList[10], structList[11], structList[12])
+			self.analog0DataReady.emit(structList[13])
+			self.analog1DataReady.emit(structList[14])
+			self.analog2DataReady.emit(structList[15])
+			self.analog3DataReady.emit(structList[16])
+			self.labelDataReady.emit(structList[17], structList[19])
 			print (structList)
 
 	def run(self):

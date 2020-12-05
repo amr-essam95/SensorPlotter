@@ -5,6 +5,9 @@ import sys
 sys.path.append(".")
 from styler import Styler
 
+from pyqtgraph import PlotWidget, plot
+import pyqtgraph as pg
+
 class PlottingFrame(QtWidgets.QFrame): 
 	def __init__(self, socketController, parent=None): 
 		super().__init__()
@@ -18,9 +21,20 @@ class PlottingFrame(QtWidgets.QFrame):
 		self.syncFrame = ""
 		self.userFrame = ""
 
+		self.thighPlot = ""
+		self.shankPlot = ""
+		self.currentPlot = ""
+
+		self.analog0Plot = ""
+		self.analog1Plot = ""
+		self.analog2Plot = ""
+		self.analog3Plot = ""
+
 		self.styler = Styler()
 
 		self.socketController = socketController
+
+		self.socketController.socketCommunicator.labelDataReady.connect(self.onLabelDataReady)
 
 		self.createAnglePlotsFrame()
 		self.createAnalogPlotsFrame()
@@ -29,13 +43,39 @@ class PlottingFrame(QtWidgets.QFrame):
 
 	def createAnglePlotsFrame(self):
 
+		self.createThighPlot()
+		self.createShankPlot()
+		self.createCurrentPlot()
+
+		anglePlotsLayout = QtWidgets.QVBoxLayout()
+		anglePlotsLayout.setContentsMargins(10,10,10,10)
+		anglePlotsLayout.setSpacing(0)
+		anglePlotsLayout.addWidget(self.thighPlot)
+		anglePlotsLayout.addWidget(self.shankPlot)
+		anglePlotsLayout.addWidget(self.currentPlot)
+
 		self.anglePlotsFrame = QtWidgets.QFrame()
 		self.styler.addShadow(self.anglePlotsFrame)
+		self.anglePlotsFrame.setLayout(anglePlotsLayout)
 
 	def createAnalogPlotsFrame(self):
 
+		self.createAnalog0Plot()
+		self.createAnalog1Plot()
+		self.createAnalog2Plot()
+		self.createAnalog3Plot()
+
+		analogPlotsLayout = QtWidgets.QVBoxLayout()
+		analogPlotsLayout.setContentsMargins(10,10,10,10)
+		analogPlotsLayout.setSpacing(0)
+		analogPlotsLayout.addWidget(self.analog0Plot)
+		analogPlotsLayout.addWidget(self.analog1Plot)
+		analogPlotsLayout.addWidget(self.analog2Plot)
+		analogPlotsLayout.addWidget(self.analog3Plot)
+
 		self.analogPlotsFrame = QtWidgets.QFrame()
 		self.styler.addShadow(self.analogPlotsFrame)
+		self.analogPlotsFrame.setLayout(analogPlotsLayout)
 
 	def createButtonsFrame(self):
 
@@ -78,6 +118,55 @@ class PlottingFrame(QtWidgets.QFrame):
 		self.buttonsFrame = QtWidgets.QFrame()
 		self.buttonsFrame.setLayout(buttonsLayout)
 		self.styler.addShadow(self.buttonsFrame)
+
+	def createPlot(self, title, xLabel, yLabel):
+
+		plot = pg.PlotWidget()
+
+		blackColor = (0,0,0)
+
+		plot.setBackground('w')
+		plot.setTitle("<span style=\"color:black; font-size:30==40pt\">{}</span>".format(title))
+
+		styles = {'color':'rgba(0,0,0,1)', 'font-size':'15px'}
+		plot.getAxis('left').setPen(color=blackColor)
+		plot.getAxis('bottom').setPen(color=blackColor)
+
+		plot.getAxis('left').setTextPen(color=blackColor)
+		plot.getAxis('bottom').setTextPen(color=blackColor) 
+
+		plot.setLabel('left', xLabel, **styles)
+		plot.setLabel('bottom', yLabel, **styles)
+
+		return plot
+
+	def createThighPlot(self):
+		
+		self.thighPlot = self.createPlot('Thigh Plot', 'Thigh (deg)', 'Time (S)')
+
+	def createShankPlot(self):
+
+		self.shankPlot = self.createPlot('Shank Plot', 'Shank (deg)', 'Time (S)')
+
+	def createCurrentPlot(self):
+
+		self.currentPlot = self.createPlot('Current Plot', 'Current (deg)', 'Time (S)')
+
+	def createAnalog0Plot(self):
+
+		self.analog0Plot = self.createPlot('Analog 0', 'Ch0 (mV)', 'Time (S)')
+
+	def createAnalog1Plot(self):
+
+		self.analog1Plot = self.createPlot('Analog 1', 'Ch1 (mV)', 'Time (S)')
+
+	def createAnalog2Plot(self):
+
+		self.analog2Plot = self.createPlot('Analog 2', 'Ch2 (mV)', 'Time (S)')
+
+	def createAnalog3Plot(self):
+
+		self.analog3Plot = self.createPlot('Analog 3', 'Ch3 (mV)', 'Time (S)')
 
 	def manageLayouts(self):
 		
@@ -123,3 +212,8 @@ class PlottingFrame(QtWidgets.QFrame):
 		else:
 			self.userLabel.setStyleSheet(self.styler.labelOffStyle)
 			self.userFrame.setStyleSheet(self.styler.labelFrameOffStyle)
+
+	def onLabelDataReady(self, syncIn, userBtn):
+		
+		self.setSyncLabelState(syncIn)
+		self.setUserLabelState(userBtn)
