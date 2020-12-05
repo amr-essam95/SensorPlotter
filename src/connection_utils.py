@@ -1,6 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 import socket
+import struct
 
 class SocketCommunicator(QtCore.QObject):
 
@@ -30,24 +31,12 @@ class SocketCommunicator(QtCore.QObject):
 	def receiveData(self):
 		
 		while True:
-			data = self.socketConnection.recv(56)
+			data = self.socketConnection.recv(60)
 			if not data: break
-			print (data)
-
+			structList = struct.unpack("iiiiiiihhhhhhHHHHBBBhhhh",data)
+			print (structList)
 
 	def run(self):
 		print("Thread start")
 		self.receiveData()
 		print("Thread complete")
-
-
-
-
-# with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-#     s.connect((HOST, PORT))
-#     s.sendall(b'Hello, world')
-#     while True:
-#         data = s.recv(56)
-#         if not data: break
-#         print (data)
-#         # print(struct.unpack("iiiiiiihhhhhhhhhhBBBhh",data))

@@ -179,5 +179,5 @@ class SettingsFrame(QtWidgets.QFrame):
 		logFile = open('log_{}'.format(participantId), 'w')
 		logFile.write("{}".format(participantId))
 
-		self.socketController.sendData("amr")
+		self.socketController.sendData()
 		

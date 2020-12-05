@@ -12,10 +12,10 @@ class SocketController(QtCore.QObject):
 	def __init__(self, parent=None):
 		super(SocketController, self).__init__(parent)
 
-		self.enableState = ""
-		self.magnitudeLx = ""
-		self.magnitudeRx = ""
-		self.markerState = ""
+		self.enableState = 0
+		self.magnitudeLx = 0
+		self.magnitudeRx = 0
+		self.markerState = 0
 		self.desiredForceProfile = []
 
 		self.socketCommunicator = SocketCommunicator()
@@ -41,9 +41,16 @@ class SocketController(QtCore.QObject):
 
 		self.socketCommunicator.connect()
 
-	def sendData(self, data):
-		var = struct.pack('hhl', 5, 10, 15)
-		self.socketCommunicator.sendData(var)
+	def sendData(self):
+		structData = self.constructData()
+		self.socketCommunicator.sendData(structData)
+
+	def constructData(self):
+		
+		dummy1 = 0
+		dummy2 = 0
+		structData = struct.pack('?BB?100HHH', self.enableState, self.magnitudeLx, self.magnitudeRx, self.markerState, *self.desiredForceProfile, dummy1, dummy2)
+		return structData
 
 	def startStreaming(self):
 
@@ -66,5 +73,5 @@ class SocketController(QtCore.QObject):
 		print ("Marker State : {}".format(self.markerState))
 
 	def desiredForceProfileChanged(self, desiredForce):
-		self.desiredForceProfileChanged = desiredForce
-		print ("Desired Force Profile : {}".format(str(len(desiredForce))))
+		self.desiredForceProfile = desiredForce
+		print ("Desired Force Profile : {}".format(str(len(self.desiredForceProfile))))
