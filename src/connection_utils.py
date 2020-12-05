@@ -5,6 +5,15 @@ import struct
 
 class SocketCommunicator(QtCore.QObject):
 
+	thighDataReady = QtCore.pyqtSignal()
+	shankDataReady = QtCore.pyqtSignal()
+	currentDataReady = QtCore.pyqtSignal()
+	analog0DataReady = QtCore.pyqtSignal()
+	analog1DataReady = QtCore.pyqtSignal()
+	analog2DataReady = QtCore.pyqtSignal()
+	analog3DataReady = QtCore.pyqtSignal()
+	dataLabelReady = QtCore.pyqtSignal()
+
 	def __init__(self, parent=None):
 		super(SocketCommunicator, self).__init__(parent)
 		# self.hostname = '192.168.7.2'
