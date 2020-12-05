@@ -146,18 +146,15 @@ class SettingsFrame(QtWidgets.QFrame):
 
 	def onConnectButtonClicked(self):
 
-		print ("connect button clicked")
 		self.socketController.startConnection()
 
 	def onStreamButtonClicked(self):
 
-		print ("stream button clicked")
 		self.socketController.startStreaming()
 
 
 	def onSetMarkerButtonClicked(self):
 
-		print ("set marker button clicked")
 		if self.markerState == 1:
 			self.markerState = 0
 		else:

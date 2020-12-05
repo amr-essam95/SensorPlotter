@@ -1,5 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QColor
+import pyqtgraph as pg
 
 class Styler:
 	def __init__(self):
@@ -108,6 +109,14 @@ class Styler:
 				border-radius: 40px;
 			}
 		"""
+
+		self.blackPen = pg.mkPen(color=(0,0,0))
+		self.blackDottedPen = pg.mkPen(color=(0,0,0), style=QtCore.Qt.DashLine)
+		self.bluePen = pg.mkPen(color=(44,90,160))
+		self.blueDottedPen = pg.mkPen(color=(44,90,160), style=QtCore.Qt.DashLine)
+		self.redPen = pg.mkPen(color=(170,0,0))
+
+		
 
 	def addShadow(self, widget):
 		

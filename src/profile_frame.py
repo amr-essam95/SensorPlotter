@@ -76,8 +76,7 @@ class ProfileFrame(QtWidgets.QFrame):
 		blackColor = (0,0,0)
 
 		self.profilePlot.setBackground('w')
-		self.profilePlot.setTitle("<span style=\"color:black; font-size:30==40pt\">Profile Plot</span>")
-		self.profilePlot.setTitle("Profile Plot", color=blackColor)
+		self.profilePlot.setTitle("<span style=\"color:black; font-size:15pt\">Profile Plot</span>")
 
 		styles = {'color':'rgba(0,0,0,1)', 'font-size':'15px'}
 		self.profilePlot.getAxis('left').setPen(color=blackColor)
@@ -129,7 +128,6 @@ class ProfileFrame(QtWidgets.QFrame):
 
 	def onSetProfileClicked(self):
 
-		print("setProfile clicked")
 		self.socketController.desiredForceProfileChanged(self.profileIntList)
 
 	def onBrowseButtonClicked(self):

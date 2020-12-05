@@ -32,7 +32,6 @@ class SocketController(QtCore.QObject):
 
 		
 	def onParentDestroyed(self):
-		print ("will delete")
 
 		self.socketCommunicator = None
 		self.thread.terminate()
@@ -59,20 +58,15 @@ class SocketController(QtCore.QObject):
 
 	def enableStateChanged(self, state):
 		self.enableState = state
-		print ("Enable State : {}".format(self.enableState))
 
 	def magnitudeScalingLXChanged(self, value):
 		self.magnitudeLx = value
-		print ("Magnitude Lx : {}".format(self.magnitudeLx))
 
 	def magnitudeScalingRXChanged(self, value):
 		self.magnitudeRx = value
-		print ("Magnitude Rx : {}".format(self.magnitudeRx))
 
 	def markerStateChanged(self, markerState):
 		self.markerState = markerState
-		print ("Marker State : {}".format(self.markerState))
 
 	def desiredForceProfileChanged(self, desiredForce):
 		self.desiredForceProfile = desiredForce
-		print ("Desired Force Profile : {}".format(str(len(self.desiredForceProfile))))
