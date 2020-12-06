@@ -2,9 +2,11 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 import sys
 import struct
+import threading
 
 sys.path.append(".")
 from connection_utils import SocketCommunicator
+from plot_updater import PlotUpdater
 
 
 class SocketController(QtCore.QObject):
@@ -25,17 +27,33 @@ class SocketController(QtCore.QObject):
 		self.thread.setTerminationEnabled(True)
 		self.socketCommunicator.moveToThread(self.thread)
 
+		self.plotUpdater = PlotUpdater(self.socketCommunicator)
+		self.updaterThread = QtCore.QThread(self)
+		self.updaterThread.setTerminationEnabled(True)
+		self.plotUpdater.moveToThread(self.updaterThread)
+
+		self.updaterThread.finished.connect(self.threadFinished)
+
 		parent.destroyed.connect(self.onParentDestroyed)
 
 		self.streamData.connect(self.socketCommunicator.receiveData)
 		self.thread.start()
-
+		self.socketCommunicator.thighDataReady.connect(self.plotUpdater.onThighDataReady)
+		self.updaterThread.start()
+	
+	def threadFinished(self):
+		print ("thread finished")
 		
 	def onParentDestroyed(self):
 
 		self.socketCommunicator = None
+		self.plotUpdater = None
+
 		self.thread.terminate()
+		self.updaterThread.terminate()
+
 		self.thread = None
+		self.updaterThread = None
 
 	def startConnection(self):
 

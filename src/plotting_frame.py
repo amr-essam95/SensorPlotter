@@ -69,14 +69,14 @@ class PlottingFrame(QtWidgets.QFrame):
 
 		self.socketController = socketController
 
-		self.socketController.socketCommunicator.labelDataReady.connect(self.onLabelDataReady)
-		self.socketController.socketCommunicator.thighDataReady.connect(self.onThighDataReady)
-		self.socketController.socketCommunicator.shankDataReady.connect(self.onShankDataReady)
-		self.socketController.socketCommunicator.currentDataReady.connect(self.onCurrentDataReady)
-		self.socketController.socketCommunicator.analog0DataReady.connect(self.onAnalog0DataReady)
-		self.socketController.socketCommunicator.analog1DataReady.connect(self.onAnalog1DataReady)
-		self.socketController.socketCommunicator.analog2DataReady.connect(self.onAnalog2DataReady)
-		self.socketController.socketCommunicator.analog3DataReady.connect(self.onAnalog3DataReady)
+		# self.socketController.socketCommunicator.labelDataReady.connect(self.onLabelDataReady)
+		# self.socketController.socketCommunicator.thighDataReady.connect(self.onThighDataReady)
+		# self.socketController.socketCommunicator.shankDataReady.connect(self.onShankDataReady)
+		# self.socketController.socketCommunicator.currentDataReady.connect(self.onCurrentDataReady)
+		# self.socketController.socketCommunicator.analog0DataReady.connect(self.onAnalog0DataReady)
+		# self.socketController.socketCommunicator.analog1DataReady.connect(self.onAnalog1DataReady)
+		# self.socketController.socketCommunicator.analog2DataReady.connect(self.onAnalog2DataReady)
+		# self.socketController.socketCommunicator.analog3DataReady.connect(self.onAnalog3DataReady)
 
 		self.createAnglePlotsFrame()
 		self.createAnalogPlotsFrame()

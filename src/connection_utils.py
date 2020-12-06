@@ -2,6 +2,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 import socket
 import struct
+import threading
 
 class SocketCommunicator(QtCore.QObject):
 
@@ -38,6 +39,7 @@ class SocketCommunicator(QtCore.QObject):
 			print ("Connection is closed, please connect first.")
 
 	def receiveData(self):
+
 		
 		while True:
 			data = self.socketConnection.recv(60)

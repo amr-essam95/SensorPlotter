@@ -26,6 +26,20 @@ class MainWindow(QtWidgets.QMainWindow):
         self.createSettingsFrame()
         self.createPlottingAreaWidget()
 
+        self.socketController.plotUpdater.rtLine = self.plottingAreaFrame.rtLine
+        self.socketController.plotUpdater.ltLine = self.plottingAreaFrame.ltLine
+        self.socketController.plotUpdater.trLine = self.plottingAreaFrame.trLine
+        self.socketController.plotUpdater.rsLine = self.plottingAreaFrame.rsLine
+        self.socketController.plotUpdater.lsLine = self.plottingAreaFrame.lsLine
+        self.socketController.plotUpdater.rmReadoutLine = self.plottingAreaFrame.rmReadoutLine
+        self.socketController.plotUpdater.lmReadoutLine = self.plottingAreaFrame.lmReadoutLine
+        self.socketController.plotUpdater.rmSentLine = self.plottingAreaFrame.rmSentLine
+        self.socketController.plotUpdater.lmSentLine = self.plottingAreaFrame.lmSentLine
+        self.socketController.plotUpdater.analogLine0 = self.plottingAreaFrame.analogLine0
+        self.socketController.plotUpdater.analogLine1 = self.plottingAreaFrame.analogLine1
+        self.socketController.plotUpdater.analogLine2 = self.plottingAreaFrame.analogLine2
+        self.socketController.plotUpdater.analogLine3 = self.plottingAreaFrame.analogLine3
+
         self.manageLayouts()
   
         # showing all the widgets 
