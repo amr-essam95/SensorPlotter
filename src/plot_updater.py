@@ -83,37 +83,50 @@ class PlotUpdater(QtCore.QObject):
 		print ("start listening")
 		print(threading.current_thread().name)
 		print(threading.get_ident())
-		 
 
-	def onThighDataReady(self, time, rt, lt, tr):
-
-		print(threading.current_thread().name)
-		print(threading.get_ident())
+	def onDataReady(self, time, rt, lt, tr, rs, ls, rmR, lmR, rmS, lmS, analog0, analog1, analog2, analog3):
 
 		if (len(self.time) > 20):
 			self.removeFirstElement = True
+		
 		if (self.removeFirstElement):
 			self.time = self.time[1:]
+
+		self.time.append(time)
+
+		self.onThighDataReady(rt, lt, tr)
+		self.onShankDataReady(rs, ls)
+		self.onCurrentDataReady( rmR, lmR, rmS, lmS)
+		self.onAnalog0DataReady(analog0)
+		self.onAnalog1DataReady(analog1)
+		self.onAnalog2DataReady(analog2)
+		self.onAnalog3DataReady(analog3)
+
+	def onThighDataReady(self, rt, lt, tr):
+
+		# print(threading.current_thread().name)
+		# print(threading.get_ident())
+
+		if self.removeFirstElement:
 			self.rtData = self.rtData[1:]
 			self.ltData = self.ltData[1:]
 			self.trData = self.trData[1:]
-
-		self.time.append(time)
+		
 		self.rtData.append(rt * 0.001)
 		self.ltData.append(lt * 0.001)
 		self.trData.append(tr * 0.001)
 
-		# get_updater().call_latest(self.rtLine.setData, self.time, self.rtData)
-		# get_updater().call_latest(self.ltLine.setData, self.time, self.ltData)
-		# get_updater().call_latest(self.trLine.setData, self.time, self.trData)
+		get_updater().call_latest(self.rtLine.setData, self.time, self.rtData)
+		get_updater().call_latest(self.ltLine.setData, self.time, self.ltData)
+		get_updater().call_latest(self.trLine.setData, self.time, self.trData)
 
-		self.rtLine.setData(self.time, self.rtData)
-		self.ltLine.setData(self.time, self.ltData)
-		self.trLine.setData(self.time, self.trData)
+		# self.rtLine.setData(self.time, self.rtData)
+		# self.ltLine.setData(self.time, self.ltData)
+		# self.trLine.setData(self.time, self.trData)
 
-	def onShankDataReady(self, time, rs, ls):
+	def onShankDataReady(self, rs, ls):
 
-		if (self.removeFirstElement):
+		if self.removeFirstElement:
 			self.rsData = self.rsData[1:]
 			self.lsData = self.lsData[1:]
 
@@ -126,7 +139,7 @@ class PlotUpdater(QtCore.QObject):
 		get_updater().call_latest(self.rsLine.setData, self.time, self.rsData)
 		get_updater().call_latest(self.lsLine.setData, self.time, self.lsData)
 
-	def onCurrentDataReady(self, time, rmR, lmR, rmS, lmS):
+	def onCurrentDataReady(self, rmR, lmR, rmS, lmS):
 
 		if (self.removeFirstElement):
 			self.rmRData = self.rmRData[1:]
@@ -153,7 +166,7 @@ class PlotUpdater(QtCore.QObject):
 	def onAnalog0DataReady(self, analog0):
 
 		if (self.removeFirstElement):
-			self.rmRanalog0DataData = self.analog0Data[1:]
+			self.analog0Data = self.analog0Data[1:]
 
 		self.analog0Data.append(analog0)
 		# self.analogLine0.setData(self.time, self.analog0Data)
@@ -186,7 +199,7 @@ class PlotUpdater(QtCore.QObject):
 			self.analog3Data = self.analog3Data[1:]
 
 		self.analog3Data.append(analog3)
-		self.analogLine3.setData(self.time, self.analog3Data)
+		# self.analogLine3.setData(self.time, self.analog3Data)
 
-		# get_updater().call_latest(self.analogLine3.setData, self.time, self.analog3Data)
+		get_updater().call_latest(self.analogLine3.setData, self.time, self.analog3Data)
 

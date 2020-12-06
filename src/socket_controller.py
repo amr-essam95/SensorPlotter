@@ -38,7 +38,15 @@ class SocketController(QtCore.QObject):
 
 		self.streamData.connect(self.socketCommunicator.receiveData)
 		self.thread.start()
-		self.socketCommunicator.thighDataReady.connect(self.plotUpdater.onThighDataReady)
+
+		self.socketCommunicator.dataReady.connect(self.plotUpdater.onDataReady)
+		# self.socketCommunicator.thighDataReady.connect(self.plotUpdater.onThighDataReady)
+		# self.socketCommunicator.shankDataReady.connect(self.plotUpdater.onShankDataReady)
+		# self.socketCommunicator.currentDataReady.connect(self.plotUpdater.onCurrentDataReady)
+		# self.socketCommunicator.analog0DataReady.connect(self.plotUpdater.onAnalog0DataReady)
+		# self.socketCommunicator.analog1DataReady.connect(self.plotUpdater.onAnalog1DataReady)
+		# self.socketCommunicator.analog2DataReady.connect(self.plotUpdater.onAnalog2DataReady)
+		# self.socketCommunicator.analog3DataReady.connect(self.plotUpdater.onAnalog3DataReady)
 		self.updaterThread.start()
 	
 	def threadFinished(self):

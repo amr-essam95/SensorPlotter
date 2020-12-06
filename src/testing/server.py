@@ -20,7 +20,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 # continue
             # print(struct.unpack("?BB?100HHH",data))
             # print("Finished Parsing.\n\n")
-            time.sleep(20/1000)
+            time.sleep(10/1000)
 
             timeStamp = timeStamp + 1
             timeStampNano = 10

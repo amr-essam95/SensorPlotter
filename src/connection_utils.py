@@ -6,6 +6,8 @@ import threading
 
 class SocketCommunicator(QtCore.QObject):
 
+	dataReady = QtCore.pyqtSignal(int, int, int, int, int, int, int, int, int, int, int, int, int, int)
+	timeDataReady = QtCore.pyqtSignal(int)
 	shankDataReady = QtCore.pyqtSignal(int, int, int)
 	thighDataReady = QtCore.pyqtSignal(int, int, int, int)
 	currentDataReady = QtCore.pyqtSignal(int, int, int, int, int)
@@ -45,14 +47,17 @@ class SocketCommunicator(QtCore.QObject):
 			data = self.socketConnection.recv(60)
 			if not data: break
 			structList = struct.unpack("iiiiiiihhHHHHHHHHBBBhhhh",data)
-			self.thighDataReady.emit(structList[0], structList[4], structList[5], structList[6])
-			self.shankDataReady.emit(structList[0], structList[2], structList[3])
-			self.currentDataReady.emit(structList[0], structList[9], structList[10], structList[11], structList[12])
-			self.analog0DataReady.emit(structList[0], structList[13])
-			self.analog1DataReady.emit(structList[0], structList[14])
-			self.analog2DataReady.emit(structList[0], structList[15])
-			self.analog3DataReady.emit(structList[0], structList[16])
-			self.labelDataReady.emit(structList[17], structList[19])
+			self.dataReady.emit(structList[0], structList[4], structList[5], structList[6], structList[2], structList[3], structList[9], structList[10], structList[11], structList[12], structList[13], structList[14], structList[15], structList[16])
+			
+			# self.timeDataReady.emit(structList[0])
+			# self.thighDataReady.emit(structList[4], structList[5], structList[6])
+			# self.shankDataReady.emit(structList[2], structList[3])
+			# self.currentDataReady.emit(structList[9], structList[10], structList[11], structList[12])
+			# self.analog0DataReady.emit(structList[13])
+			# self.analog1DataReady.emit(structList[14])
+			# self.analog2DataReady.emit(structList[15])
+			# self.analog3DataReady.emit(structList[16])
+			# self.labelDataReady.emit(structList[17], structList[19])
 			# print (structList)
 
 	def run(self):
