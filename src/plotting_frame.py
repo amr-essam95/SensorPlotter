@@ -69,14 +69,7 @@ class PlottingFrame(QtWidgets.QFrame):
 
 		self.socketController = socketController
 
-		# self.socketController.socketCommunicator.labelDataReady.connect(self.onLabelDataReady)
-		# self.socketController.socketCommunicator.thighDataReady.connect(self.onThighDataReady)
-		# self.socketController.socketCommunicator.shankDataReady.connect(self.onShankDataReady)
-		# self.socketController.socketCommunicator.currentDataReady.connect(self.onCurrentDataReady)
-		# self.socketController.socketCommunicator.analog0DataReady.connect(self.onAnalog0DataReady)
-		# self.socketController.socketCommunicator.analog1DataReady.connect(self.onAnalog1DataReady)
-		# self.socketController.socketCommunicator.analog2DataReady.connect(self.onAnalog2DataReady)
-		# self.socketController.socketCommunicator.analog3DataReady.connect(self.onAnalog3DataReady)
+		self.socketController.socketCommunicator.labelDataReady.connect(self.onLabelDataReady)
 
 		self.createAnglePlotsFrame()
 		self.createAnalogPlotsFrame()
@@ -272,84 +265,3 @@ class PlottingFrame(QtWidgets.QFrame):
 		
 		self.setSyncLabelState(syncIn)
 		self.setUserLabelState(userBtn)
-
-	def onThighDataReady(self, time, rt, lt, tr):
-
-		if (len(self.time) > 20):
-			self.removeFirstElement = True
-		if (self.removeFirstElement):
-			self.time = self.time[1:]
-			self.rtData = self.rtData[1:]
-			self.ltData = self.ltData[1:]
-			self.trData = self.trData[1:]
-
-		self.time.append(time)
-		self.rtData.append(rt * 0.001)
-		self.ltData.append(lt * 0.001)
-		self.trData.append(tr * 0.001)
-
-		self.rtLine.setData(self.time, self.rtData)
-		self.ltLine.setData(self.time, self.ltData)
-		self.trLine.setData(self.time, self.trData)
-
-	def onShankDataReady(self, time, rs, ls):
-
-		if (self.removeFirstElement):
-			self.rsData = self.rsData[1:]
-			self.lsData = self.lsData[1:]
-
-		self.rsData.append(rs * 0.001)
-		self.lsData.append(ls * 0.001)
-
-		self.rsLine.setData(self.time, self.rsData)
-		self.lsLine.setData(self.time, self.lsData)
-
-	def onCurrentDataReady(self, time, rmR, lmR, rmS, lmS):
-
-		if (self.removeFirstElement):
-			self.rmRData = self.rmRData[1:]
-			self.lmRData = self.lmRData[1:]
-			self.rmSData = self.rmSData[1:]
-			self.lmSData = self.lmSData[1:]
-
-		self.rmRData.append(rmR * 0.001)
-		self.lmRData.append(lmR * 0.001)
-		self.rmSData.append(rmS * 0.001)
-		self.lmSData.append(lmS * 0.001)
-
-		self.rmReadoutLine.setData(self.time, self.rmRData)
-		self.lmReadoutLine.setData(self.time, self.lmRData)
-		self.rmSentLine.setData(self.time, self.rmSData)
-		self.lmSentLine.setData(self.time, self.lmSData)
-
-	def onAnalog0DataReady(self, analog0):
-
-		if (self.removeFirstElement):
-			self.rmRanalog0DataData = self.analog0Data[1:]
-
-		self.analog0Data.append(analog0)
-		self.analogLine0.setData(self.time, self.analog0Data)
-
-	def onAnalog1DataReady(self, analog1):
-
-		if (self.removeFirstElement):
-			self.analog1Data = self.analog1Data[1:]
-
-		self.analog1Data.append(analog1)
-		self.analogLine1.setData(self.time, self.analog1Data)
-
-	def onAnalog2DataReady(self, analog2):
-
-		if (self.removeFirstElement):
-			self.analog2Data = self.analog2Data[1:]
-
-		self.analog2Data.append(analog2)
-		self.analogLine2.setData(self.time, self.analog2Data)
-
-	def onAnalog3DataReady(self, analog3):
-
-		if (self.removeFirstElement):
-			self.analog3Data = self.analog3Data[1:]
-
-		self.analog3Data.append(analog3)
-		self.analogLine3.setData(self.time, self.analog3Data)
