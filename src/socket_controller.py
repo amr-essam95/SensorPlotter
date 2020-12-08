@@ -21,18 +21,19 @@ class SocketController(QtCore.QObject):
 		self.magnitudeRx = 0
 		self.markerState = 0
 		self.desiredForceProfile = []
+		self.connectionSucceded = False
 
+		# Create new thread for handling socket communication.
 		self.socketCommunicator = SocketCommunicator()
 		self.thread = QtCore.QThread(self)
 		self.thread.setTerminationEnabled(True)
 		self.socketCommunicator.moveToThread(self.thread)
 
+		# Create new thread for updating graphs.
 		self.plotUpdater = PlotUpdater(self.socketCommunicator)
 		self.updaterThread = QtCore.QThread(self)
 		self.updaterThread.setTerminationEnabled(True)
 		self.plotUpdater.moveToThread(self.updaterThread)
-
-		self.updaterThread.finished.connect(self.threadFinished)
 
 		parent.destroyed.connect(self.onParentDestroyed)
 
@@ -41,9 +42,6 @@ class SocketController(QtCore.QObject):
 
 		self.socketCommunicator.dataReady.connect(self.plotUpdater.onDataReady)
 		self.updaterThread.start()
-	
-	def threadFinished(self):
-		print ("thread finished")
 		
 	def onParentDestroyed(self):
 
@@ -58,14 +56,22 @@ class SocketController(QtCore.QObject):
 
 	def startConnection(self):
 
-		self.socketCommunicator.connect()
+		if self.connectionSucceded == False:
+			self.connectionSucceded = self.socketCommunicator.connect()
+			return self.connectionSucceded
+		else:
+			return True
 
 	def sendData(self):
-		structData = self.constructData()
-		self.socketCommunicator.sendData(structData)
+		if self.connectionSucceded:
+			structData = self.constructData()
+			if structData != None:
+				self.socketCommunicator.sendData(structData)
 
 	def constructData(self):
 		
+		if len(self.desiredForceProfile) != 100:
+			return None
 		dummy1 = 0
 		dummy2 = 0
 		structData = struct.pack('?BB?100HHH', self.enableState, self.magnitudeLx, self.magnitudeRx, self.markerState, *self.desiredForceProfile, dummy1, dummy2)
@@ -73,19 +79,30 @@ class SocketController(QtCore.QObject):
 
 	def startStreaming(self):
 
-		self.streamData.emit()
+		if len(self.desiredForceProfile) != 100:
+			return False, "No profile available."
+		if self.connectionSucceded:
+			self.streamData.emit()
+			return True, ""
+		else:
+			return False, "No connection to server."
 
 	def enableStateChanged(self, state):
 		self.enableState = state
+		self.sendData()
 
 	def magnitudeScalingLXChanged(self, value):
 		self.magnitudeLx = value
+		self.sendData()
 
 	def magnitudeScalingRXChanged(self, value):
 		self.magnitudeRx = value
+		self.sendData()
 
 	def markerStateChanged(self, markerState):
 		self.markerState = markerState
+		self.sendData()
 
 	def desiredForceProfileChanged(self, desiredForce):
 		self.desiredForceProfile = desiredForce
+		self.sendData()

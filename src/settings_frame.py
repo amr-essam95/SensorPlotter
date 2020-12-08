@@ -17,11 +17,17 @@ class SettingsFrame(QtWidgets.QFrame):
 		self.slidersSettingsFrame = ""
 		self.profileSettingsFrame = ""
 
+		self.connectionStatusLabel = ""
+		self.connectButton = ""
+		self.streamButton = ""
 		self.magnitudeLxLabel = ""
 		self.magnitudeRxLabel = ""
 		self.participantIdLineEdit = ""
+		self.setMarkerButton = ""
 
 		self.markerState = 0
+		self.connectionOpened = False
+		self.streaming = False
 
 		self.styler = Styler()
 
@@ -35,23 +41,45 @@ class SettingsFrame(QtWidgets.QFrame):
 
 	def createRunningSettings(self):
 
+		self.connectionStatusLabel = QtWidgets.QLabel("Status: No connection")
+		self.connectionStatusLabel.setToolTip("Connection Status")
+		self.connectionStatusLabel.setFixedHeight(15)
+		self.connectionStatusLabel.setStyleSheet(self.styler.connectionStatusLabel)
+
+		self.logger = QtWidgets.QPlainTextEdit("")
+		self.logger.setReadOnly(True)
+		self.logger.setToolTip("Log area")
+
+		loggerLayout = QtWidgets.QVBoxLayout()
+		loggerLayout.setSpacing(1)
+		loggerLayout.setContentsMargins(1,1,1,0)
+		loggerLayout.addWidget(self.connectionStatusLabel)
+		loggerLayout.addWidget(self.logger)
+
+		loggerFrame = QtWidgets.QFrame()
+		loggerFrame.setLayout(loggerLayout)
+		loggerFrame.setStyleSheet(self.styler.loggerFrame)
+		self.logger.setStyleSheet(self.styler.noBorder)
+
 		connectIcon = QtGui.QIcon("../resources/connect.png")
-		connectButton = QtWidgets.QPushButton("  Connect")
-		connectButton.setToolTip("Connect to the server")
-		connectButton.setStyleSheet(self.styler.buttonStyle)
-		connectButton.clicked.connect(self.onConnectButtonClicked)
-		connectButton.setIcon(connectIcon)
+		self.connectButton = QtWidgets.QPushButton("  Connect")
+		self.connectButton.setToolTip("Connect to the server")
+		self.connectButton.setStyleSheet(self.styler.buttonStyle)
+		self.connectButton.clicked.connect(self.onConnectButtonClicked)
+		self.connectButton.setIcon(connectIcon)
 
 		streamIcon = QtGui.QIcon("../resources/stream.png")
-		streamButton = QtWidgets.QPushButton("  Stream")
-		streamButton.setToolTip("Stream from the server")
-		streamButton.setStyleSheet(self.styler.buttonStyle)
-		streamButton.clicked.connect(self.onStreamButtonClicked)
-		streamButton.setIcon(streamIcon)
+		self.streamButton = QtWidgets.QPushButton("  Stream")
+		self.streamButton.setToolTip("Stream from the server")
+		self.streamButton.setStyleSheet(self.styler.buttonStyle)
+		self.streamButton.clicked.connect(self.onStreamButtonClicked)
+		self.streamButton.setIcon(streamIcon)
+		self.streamButton.setEnabled(False)
 
 		runningSettingsLayout = QtWidgets.QVBoxLayout()
-		runningSettingsLayout.addWidget(connectButton)
-		runningSettingsLayout.addWidget(streamButton)
+		runningSettingsLayout.addWidget(self.connectButton)
+		runningSettingsLayout.addWidget(self.streamButton)
+		runningSettingsLayout.addWidget(loggerFrame)
 
 		self.runningSettingsFrame = QtWidgets.QFrame()
 		self.runningSettingsFrame.setLayout(runningSettingsLayout)
@@ -95,7 +123,9 @@ class SettingsFrame(QtWidgets.QFrame):
 		magnitudeLxSlider.setSingleStep(1)
 		magnitudeLxSlider.setTickInterval(10)
 		magnitudeLxSlider.setTickPosition(QtWidgets.QSlider.TicksBelow)
+		magnitudeLxSlider.setTracking(False)
 		magnitudeLxSlider.valueChanged.connect(self.magnitudeLxSliderValueChanged)
+		magnitudeLxSlider.sliderMoved.connect(self.magnitudeLxSliderMoved)
 
 		self.magnitudeRxLabel = QtWidgets.QLabel("Magnitude Scaling Rx : 0")
 		self.magnitudeRxLabel.setStyleSheet(self.styler.labelStyle)
@@ -106,12 +136,14 @@ class SettingsFrame(QtWidgets.QFrame):
 		magnitudeRxSlider.setSingleStep(1)
 		magnitudeRxSlider.setTickInterval(10)
 		magnitudeRxSlider.setTickPosition(QtWidgets.QSlider.TicksBelow)
+		magnitudeRxSlider.setTracking(False)
 		magnitudeRxSlider.valueChanged.connect(self.magnitudeRxSliderValueChanged)
+		magnitudeRxSlider.sliderMoved.connect(self.magnitudeRxSliderMoved)
 
-		setMarkerButton = QtWidgets.QPushButton("Set Marker")
-		setMarkerButton.setToolTip("Set marker in log data")
-		setMarkerButton.setStyleSheet(self.styler.buttonStyle)
-		setMarkerButton.clicked.connect(self.onSetMarkerButtonClicked)
+		self.setMarkerButton = QtWidgets.QPushButton("Set Marker")
+		self.setMarkerButton.setToolTip("Set marker in log data")
+		self.setMarkerButton.setStyleSheet(self.styler.buttonStyle)
+		self.setMarkerButton.clicked.connect(self.onSetMarkerButtonClicked)
 
 		slidersSettingsLayout = QtWidgets.QVBoxLayout()
 		slidersSettingsLayout.addSpacing(8)
@@ -119,7 +151,7 @@ class SettingsFrame(QtWidgets.QFrame):
 		slidersSettingsLayout.addWidget(magnitudeLxSlider)
 		slidersSettingsLayout.addWidget(self.magnitudeRxLabel)
 		slidersSettingsLayout.addWidget(magnitudeRxSlider)
-		slidersSettingsLayout.addWidget(setMarkerButton)
+		slidersSettingsLayout.addWidget(self.setMarkerButton)
 
 		self.slidersSettingsFrame = QtWidgets.QFrame()
 		self.slidersSettingsFrame.setLayout(slidersSettingsLayout)
@@ -135,41 +167,71 @@ class SettingsFrame(QtWidgets.QFrame):
 		mainLayout = QtWidgets.QHBoxLayout()
 		mainLayout.setContentsMargins(2,2,2,2)
 		mainLayout.setSpacing(10)
-		mainLayout.addWidget(self.runningSettingsFrame, 1)
+		mainLayout.addWidget(self.runningSettingsFrame, 2)
 		mainLayout.addWidget(self.loggingSettingsFrame, 1)
 		mainLayout.addWidget(self.slidersSettingsFrame, 2)
 		mainLayout.addWidget(self.profileSettingsFrame, 4)
 
 		self.setLayout(mainLayout)
 
+	def addMessageToLogger(self, msg):
+
+		self.logger.appendPlainText(msg)
+		self.logger.verticalScrollBar().setValue(self.logger.verticalScrollBar().maximum())
+
 	# Slots
 
 	def onConnectButtonClicked(self):
 
-		self.socketController.startConnection()
+		self.connectionOpened = self.socketController.startConnection()
+		if (self.connectionOpened):
+			self.connectionStatusLabel.setText("Status: Connected")
+			self.connectButton.setEnabled(False)
+			self.streamButton.setEnabled(True)
+		else:
+			self.connectionStatusLabel.setText("Status: No connection")
+			self.addMessageToLogger("Connection failed to the server.")
+			self.connectButton.setEnabled(True)
+			self.streamButton.setEnabled(False)
 
 	def onStreamButtonClicked(self):
 
-		self.socketController.startStreaming()
+		self.streaming, errMsg = self.socketController.startStreaming()
+		if self.streaming:
+			self.connectionStatusLabel.setText("Status: Streaming")
+			self.streamButton.setEnabled(False)
+		else:
+			self.streamButton.setEnabled(True)
+			self.addMessageToLogger("Streaming failed, {}".format(errMsg))
 
 
 	def onSetMarkerButtonClicked(self):
 
 		if self.markerState == 1:
 			self.markerState = 0
+			self.setMarkerButton.setStyleSheet(self.styler.buttonStyle)
 		else:
 			self.markerState = 1
+			self.setMarkerButton.setStyleSheet(self.styler.buttonOnStyle)
 		self.socketController.markerStateChanged(self.markerState)
 
 	def magnitudeLxSliderValueChanged(self, value):
+		
+		self.magnitudeLxSliderMoved(value)
+		self.socketController.magnitudeScalingLXChanged(value)
+
+	def magnitudeLxSliderMoved(self, value):
 
 		self.magnitudeLxLabel.setText("Magnitude Scaling Lx : {}".format(value))
-		self.socketController.magnitudeScalingLXChanged(value)
 
 	def magnitudeRxSliderValueChanged(self, value):
 
-		self.magnitudeRxLabel.setText("Magnitude Scaling Rx : {}".format(value))
+		self.magnitudeRxSliderMoved(value)
 		self.socketController.magnitudeScalingRXChanged(value)
+
+	def magnitudeRxSliderMoved(self, value):
+
+		self.magnitudeRxLabel.setText("Magnitude Scaling Rx : {}".format(value))
 
 	def onLogButtonClicked(self):
 		participantId = self.participantIdLineEdit.text().strip()

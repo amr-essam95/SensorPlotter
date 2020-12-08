@@ -18,7 +18,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             # print("received data {}".format(data))
             # if not data:
                 # continue
-            # print(struct.unpack("?BB?100HHH",data))
+            # rcvStruct = struct.unpack("?BB?100HHH",data)
+            # print (rcvStruct)
+            # print (struct.calcsize("?BB?100HHH"))
             # print("Finished Parsing.\n\n")
             time.sleep(5/1000)
 

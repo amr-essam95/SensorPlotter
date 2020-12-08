@@ -110,6 +110,41 @@ class Styler:
 			}
 		"""
 
+		self.buttonOnStyle = """
+			QPushButton {
+				background-color: rgb(65,88,134);
+				border: 1px solid rgb(65,88,134);
+				height: 30px;
+				padding: 4px;
+				font-size: 12px;
+				color: white;
+			}
+			QPushButton::Pressed {
+				border: 2px solid rgb(65,88,134);
+				background-color: rgb(255,255,255);
+				color: black;
+			}
+		"""
+
+		self.connectionStatusLabel = """
+			QLabel {
+				margin-left: 1px;
+				border: none;
+			}
+		"""
+
+		self.loggerFrame = """
+			QFrame {
+				border: 1px solid rgb(65,88,134);
+			}
+		"""
+
+		self.noBorder = """
+			QFrame {
+				border: none;
+			}
+		"""
+
 		self.blackPen = pg.mkPen(color=(0,0,0))
 		self.blackDottedPen = pg.mkPen(color=(0,0,0), style=QtCore.Qt.DashLine)
 		self.bluePen = pg.mkPen(color=(44,90,160))
