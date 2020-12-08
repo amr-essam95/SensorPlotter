@@ -22,7 +22,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             # print (rcvStruct)
             # print (struct.calcsize("?BB?100HHH"))
             # print("Finished Parsing.\n\n")
-            time.sleep(5/1000)
+            time.sleep(10/1000)
 
             timeStamp = timeStamp + 1
             timeStampNano = 10
