@@ -8,7 +8,7 @@ import queue
 
 class SocketCommunicator(QtCore.QObject):
 
-	dataReady = QtCore.pyqtSignal(int, int, int, int, int, int, int, int, int, int, int, int, int, int)
+	dataReady = QtCore.pyqtSignal(list)
 	labelDataReady = QtCore.pyqtSignal(bool, bool)
 
 	def __init__(self, parent=None):
@@ -52,9 +52,12 @@ class SocketCommunicator(QtCore.QObject):
 				if ready_socket is self.socketConnection:
 					data = self.socketConnection.recv(60)
 					if not data: continue
-					structList = struct.unpack("iiiiiiihhHHHHHHHHBBBhhhh",data)
-					self.dataReady.emit(structList[0], structList[4], structList[5], structList[6], structList[2], structList[3], structList[9], structList[10], structList[11], structList[12], structList[13], structList[14], structList[15], structList[16])
-					self.labelDataReady.emit(structList[17], structList[19])
+					try:
+						structList = struct.unpack("iiiiiiihhHHHHHHHHBBBhhhh",data)
+						self.dataReady.emit(list(structList))
+						self.labelDataReady.emit(structList[17], structList[19])
+					except:
+						print ("Wrong format of data is received.")
 				else:
 					# Ready_socket is rsock
 

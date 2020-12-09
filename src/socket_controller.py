@@ -1,6 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 import sys
+import csv
 import struct
 import threading
 
@@ -106,3 +107,14 @@ class SocketController(QtCore.QObject):
 	def desiredForceProfileChanged(self, desiredForce):
 		self.desiredForceProfile = desiredForce
 		self.sendData()
+
+	def logData(self, participantId):
+
+		with open('log_{}'.format(participantId), mode='w') as logFile:
+
+			logFile.write("{}\n".format(participantId))
+			logWriter = csv.writer(logFile, delimiter='	')
+
+			receivedData = self.plotUpdater.receivedData
+			for row in receivedData:
+				logWriter.writerow(row)

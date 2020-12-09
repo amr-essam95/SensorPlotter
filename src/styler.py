@@ -116,21 +116,21 @@ class Styler:
 			}
 		"""
 
-		# self.buttonOnStyle = """
-		# 	QPushButton {
-		# 		background-color: rgb(65,88,134);
-		# 		border: 1px solid rgb(65,88,134);
-		# 		height: 30px;
-		# 		padding: 4px;
-		# 		font-size: 12px;
-		# 		color: white;
-		# 	}
-		# 	QPushButton::Pressed {
-		# 		border: 2px solid rgb(65,88,134);
-		# 		background-color: rgb(255,255,255);
-		# 		color: black;
-		# 	}
-		# """
+		self.buttonOnStyle = """
+			QPushButton {
+				background-color: rgb(65,88,134);
+				border: 1px solid rgb(65,88,134);
+				height: 30px;
+				padding: 4px;
+				font-size: 12px;
+				color: white;
+			}
+			QPushButton::Pressed {
+				border: 2px solid rgb(65,88,134);
+				background-color: rgb(255,255,255);
+				color: black;
+			}
+		"""
 
 		self.connectionStatusLabel = """
 			QLabel {

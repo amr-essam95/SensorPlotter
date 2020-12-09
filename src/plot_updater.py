@@ -20,6 +20,8 @@ class PlotUpdater(QtCore.QObject):
 		super(PlotUpdater, self).__init__(parent)
 
 		self.removeFirstElement = False
+
+		self.receivedData = list()
 		
 		self.time = []
 
@@ -75,7 +77,24 @@ class PlotUpdater(QtCore.QObject):
 		print(threading.current_thread().name)
 		print(threading.get_ident())
 
-	def onDataReady(self, time, rt, lt, tr, rs, ls, rmR, lmR, rmS, lmS, analog0, analog1, analog2, analog3):
+	def onDataReady(self, structList):
+
+		self.receivedData.append(structList)
+		
+		time = structList[0]
+		rt = structList[4]
+		lt = structList[5]
+		tr = structList[6]
+		rs = structList[2]
+		ls = structList[3]
+		rmR = structList[9]
+		lmR = structList[10]
+		rmS = structList[11]
+		lmS = structList[12]
+		analog0 = structList[13]
+		analog1 = structList[14]
+		analog2 = structList[15]
+		analog3 = structList[16]
 
 		if (len(self.time) > 20):
 			self.removeFirstElement = True

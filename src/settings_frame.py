@@ -251,8 +251,7 @@ class SettingsFrame(QtWidgets.QFrame):
 
 	def onLogButtonClicked(self):
 		participantId = self.participantIdLineEdit.text().strip()
-		logFile = open('log_{}'.format(participantId), 'w')
-		logFile.write("{}".format(participantId))
 
-		self.socketController.sendData()
+
+		self.socketController.logData(participantId)
 		
