@@ -11,7 +11,6 @@ App = QtWidgets.QApplication(sys.argv)
   
 # create the instance of our Window 
 window = MainWindow()
-window.setStyleSheet("background-color: white")
   
 # start the app 
 sys.exit(App.exec())

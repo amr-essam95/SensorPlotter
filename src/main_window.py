@@ -20,7 +20,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.socketController = SocketController(self)
   
         # setting title 
-        self.setWindowTitle("Sensor Plotter") 
+        self.setWindowTitle("myoswiss")
+
+        self.setStyleSheet("background-color: white")
   
         # Creating widgets. 
         self.createSettingsFrame()

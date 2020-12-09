@@ -41,6 +41,37 @@ class SettingsFrame(QtWidgets.QFrame):
 
 	def createRunningSettings(self):
 
+		logoIcon = QtGui.QPixmap("../resources/myoswiss-K.png")
+		logoLabel = QtWidgets.QLabel()
+		logoLabel.setPixmap(logoIcon)
+		logoLabel.setFixedHeight(30)
+
+		logoLabelLayout = QtWidgets.QHBoxLayout()
+		logoLabelLayout.setSpacing(0)
+		logoLabelLayout.setContentsMargins(2,2,2,2)
+		logoLabelLayout.addWidget(logoLabel)
+
+		connectIcon = QtGui.QIcon("../resources/connect.png")
+		self.connectButton = QtWidgets.QPushButton("  Connect")
+		self.connectButton.setToolTip("Connect to the server")
+		self.connectButton.setStyleSheet(self.styler.buttonStyle)
+		self.connectButton.clicked.connect(self.onConnectButtonClicked)
+		self.connectButton.setIcon(connectIcon)
+
+		streamIcon = QtGui.QIcon("../resources/stream.png")
+		self.streamButton = QtWidgets.QPushButton("  Stream")
+		self.streamButton.setToolTip("Stream from the server")
+		self.streamButton.setStyleSheet(self.styler.buttonStyle)
+		self.streamButton.clicked.connect(self.onStreamButtonClicked)
+		self.streamButton.setIcon(streamIcon)
+		self.streamButton.setEnabled(False)
+
+		buttonsLayout = QtWidgets.QHBoxLayout()
+		buttonsLayout.setSpacing(4)
+		buttonsLayout.setContentsMargins(0,0,0,0)
+		buttonsLayout.addWidget(self.connectButton)
+		buttonsLayout.addWidget(self.streamButton)
+
 		self.connectionStatusLabel = QtWidgets.QLabel("Status: No connection")
 		self.connectionStatusLabel.setToolTip("Connection Status")
 		self.connectionStatusLabel.setFixedHeight(15)
@@ -61,24 +92,9 @@ class SettingsFrame(QtWidgets.QFrame):
 		loggerFrame.setStyleSheet(self.styler.loggerFrame)
 		self.logger.setStyleSheet(self.styler.noBorder)
 
-		connectIcon = QtGui.QIcon("../resources/connect.png")
-		self.connectButton = QtWidgets.QPushButton("  Connect")
-		self.connectButton.setToolTip("Connect to the server")
-		self.connectButton.setStyleSheet(self.styler.buttonStyle)
-		self.connectButton.clicked.connect(self.onConnectButtonClicked)
-		self.connectButton.setIcon(connectIcon)
-
-		streamIcon = QtGui.QIcon("../resources/stream.png")
-		self.streamButton = QtWidgets.QPushButton("  Stream")
-		self.streamButton.setToolTip("Stream from the server")
-		self.streamButton.setStyleSheet(self.styler.buttonStyle)
-		self.streamButton.clicked.connect(self.onStreamButtonClicked)
-		self.streamButton.setIcon(streamIcon)
-		self.streamButton.setEnabled(False)
-
 		runningSettingsLayout = QtWidgets.QVBoxLayout()
-		runningSettingsLayout.addWidget(self.connectButton)
-		runningSettingsLayout.addWidget(self.streamButton)
+		runningSettingsLayout.addLayout(logoLabelLayout)
+		runningSettingsLayout.addLayout(buttonsLayout)
 		runningSettingsLayout.addWidget(loggerFrame)
 
 		self.runningSettingsFrame = QtWidgets.QFrame()

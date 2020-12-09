@@ -32,7 +32,6 @@ class SocketCommunicator(QtCore.QObject):
 
 		except:
 			self.socketConnectionSucceeded = False
-			print ("Connection with Server failed.")
 
 		return self.socketConnectionSucceeded
 

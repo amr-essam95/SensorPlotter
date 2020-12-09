@@ -15,11 +15,14 @@ class PlottingFrame(QtWidgets.QFrame):
 		self.anglePlotsFrame = ""
 		self.analogPlotsFrame = ""
 		self.buttonsFrame = ""
-		self.runButton = ""
+		self.enableButton = ""
 		self.syncButton = ""
 		self.userButton = ""
 		self.syncFrame = ""
 		self.userFrame = ""
+		self.enableLabel = ""
+
+		self.enableState = 0
 
 		self.removeFirstElement = False
 
@@ -114,10 +117,24 @@ class PlottingFrame(QtWidgets.QFrame):
 
 	def createButtonsFrame(self):
 
-		self.runButton = QtWidgets.QPushButton()
-		self.runButton.setStyleSheet(self.styler.playButtonStyle)
-		self.runButton.setIconSize(QtCore.QSize(70,70))
-		self.runButton.clicked.connect(self.onRunButtonClicked)
+		self.enableLabel = QtWidgets.QPushButton("Enable")
+		self.enableLabel.setStyleSheet(self.styler.enableLabel)
+		self.enableLabel.clicked.connect(self.onEnableButtonClicked)
+
+		self.enableButton = QtWidgets.QPushButton()
+		self.enableButton.setToolTip("Enable")
+		self.enableButton.setStyleSheet(self.styler.enableButtonStyle)
+		self.enableButton.setIconSize(QtCore.QSize(70,70))
+		self.enableButton.clicked.connect(self.onEnableButtonClicked)
+
+		enableButtonLayout = QtWidgets.QVBoxLayout()
+		enableButtonLayout.setSpacing(5)
+		enableButtonLayout.setContentsMargins(0,0,0,0)
+		enableButtonLayout.addWidget(self.enableButton)
+		enableButtonLayout.addWidget(self.enableLabel)
+
+		enableButtonFrame = QtWidgets.QFrame()
+		enableButtonFrame.setLayout(enableButtonLayout)
 
 		self.syncLabel = QtWidgets.QLabel("SYNC")
 		self.syncLabel.setStyleSheet(self.styler.labelOffStyle)
@@ -146,7 +163,7 @@ class PlottingFrame(QtWidgets.QFrame):
 		buttonsLayout = QtWidgets.QVBoxLayout()
 		buttonsLayout.setContentsMargins(20,20,20,20)
 		buttonsLayout.setAlignment(QtCore.Qt.AlignHCenter)
-		buttonsLayout.addWidget(self.runButton, 0, QtCore.Qt.AlignTop)
+		buttonsLayout.addWidget(enableButtonFrame, 0, QtCore.Qt.AlignTop)
 		buttonsLayout.addWidget(self.syncFrame)
 		buttonsLayout.addWidget(self.userFrame, 0, QtCore.Qt.AlignBottom)
 
@@ -229,19 +246,16 @@ class PlottingFrame(QtWidgets.QFrame):
 
 	# Slots
 
-	def onRunButtonClicked(self):
+	def onEnableButtonClicked(self):
 		
-		self.runButton.clicked.disconnect(self.onRunButtonClicked)
-		self.runButton.setStyleSheet(self.styler.pauseButtonStyle)
-		self.runButton.clicked.connect(self.onPauseButtonClicked)
-		self.socketController.enableStateChanged(1)
-
-	def onPauseButtonClicked(self):
-
-		self.runButton.clicked.disconnect(self.onPauseButtonClicked)
-		self.runButton.setStyleSheet(self.styler.playButtonStyle)
-		self.runButton.clicked.connect(self.onRunButtonClicked)
-		self.socketController.enableStateChanged(0)
+		if self.enableState == 0:
+			self.enableState = 1
+			self.enableLabel.setText("Disable")
+			self.socketController.enableStateChanged(self.enableState)
+		else:
+			self.enableState = 0
+			self.enableLabel.setText("Enable")
+			self.socketController.enableStateChanged(self.enableState)
 
 	def setSyncLabelState(self, state):
 
