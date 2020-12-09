@@ -33,7 +33,7 @@ class SocketCommunicator(QtCore.QObject):
 		except:
 			self.socketConnectionSucceeded = False
 			print ("Connection with Server failed.")
-			
+
 		return self.socketConnectionSucceeded
 
 	def sendData(self, data):
@@ -58,7 +58,10 @@ class SocketCommunicator(QtCore.QObject):
 					self.labelDataReady.emit(structList[17], structList[19])
 				else:
 					# Ready_socket is rsock
-					self.rsock.recv(1)  # Dump the ready mark
+
+					# Dump the ready mark
+					self.rsock.recv(1)
+
 					# Send the data.
 					dataToSend = self.send_queue.get()
 					print (dataToSend)
