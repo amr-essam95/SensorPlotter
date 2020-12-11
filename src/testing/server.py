@@ -15,12 +15,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         print('Connected by', addr)
         while True:
             # data = conn.recv(1024)
-            # print("received data {}".format(data))
+            # # print("received data {}".format(data))
             # if not data:
-                # continue
+            #     continue
             # rcvStruct = struct.unpack("?BB?100HHH",data)
             # print (rcvStruct)
-            # print (struct.calcsize("?BB?100HHH"))
+            # # print (struct.calcsize("?BB?100HHH"))
             # print("Finished Parsing.\n\n")
             time.sleep(10/1000)
 

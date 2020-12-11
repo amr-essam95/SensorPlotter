@@ -229,7 +229,7 @@ class SettingsFrame(QtWidgets.QFrame):
 		else:
 			self.markerState = 1
 			self.setMarkerButton.setStyleSheet(self.styler.buttonOnStyle)
-		self.socketController.markerStateChanged(self.markerState)
+		self.socketController.onMarkerStateChanged(self.markerState)
 
 	def magnitudeLxSliderValueChanged(self, value):
 		

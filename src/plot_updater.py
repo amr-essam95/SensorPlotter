@@ -22,6 +22,8 @@ class PlotUpdater(QtCore.QObject):
 		self.removeFirstElement = False
 
 		self.receivedData = list()
+
+		self.markerState = 0
 		
 		self.time = []
 
@@ -77,8 +79,13 @@ class PlotUpdater(QtCore.QObject):
 		print(threading.current_thread().name)
 		print(threading.get_ident())
 
+	def onMarkerStateChanged(self, markerState):
+
+		self.markerState = markerState
+
 	def onDataReady(self, structList):
 
+		structList.append(self.markerState)
 		self.receivedData.append(structList)
 		
 		time = structList[0]

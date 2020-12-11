@@ -13,6 +13,7 @@ from plot_updater import PlotUpdater
 class SocketController(QtCore.QObject):
 
 	streamData = QtCore.pyqtSignal()
+	markerStateChanged = QtCore.pyqtSignal(int)
 
 	def __init__(self, parent=None):
 		super(SocketController, self).__init__(parent)
@@ -23,6 +24,10 @@ class SocketController(QtCore.QObject):
 		self.markerState = 0
 		self.desiredForceProfile = []
 		self.connectionSucceded = False
+		self.headerList = []
+		
+		# Fill header list for the log file.
+		self.fillLogHeaderList()
 
 		# Create new thread for handling socket communication.
 		self.socketCommunicator = SocketCommunicator()
@@ -42,6 +47,7 @@ class SocketController(QtCore.QObject):
 		self.thread.start()
 
 		self.socketCommunicator.dataReady.connect(self.plotUpdater.onDataReady)
+		self.markerStateChanged.connect(self.plotUpdater.onMarkerStateChanged)
 		self.updaterThread.start()
 		
 	def onParentDestroyed(self):
@@ -100,21 +106,54 @@ class SocketController(QtCore.QObject):
 		self.magnitudeRx = value
 		self.sendData()
 
-	def markerStateChanged(self, markerState):
+	def onMarkerStateChanged(self, markerState):
 		self.markerState = markerState
+		self.markerStateChanged.emit(self.markerState)
 		self.sendData()
 
 	def desiredForceProfileChanged(self, desiredForce):
 		self.desiredForceProfile = desiredForce
 		self.sendData()
 
+	def fillLogHeaderList(self):
+
+		self.headerList = [
+			"Timestamp(s)",
+			"Timestamp(ns)",
+			"RS_AFlt",
+			"LS_AFlt",
+			"RT_AFlt",
+			"LT_AFlt",
+			"Tr_AFlt",
+			"RM_Enc",
+			"LM_Enc",
+			"RM_CurR",
+			"LM_CurR",
+			"RM_CurS",
+			"LM_CurS",
+			"Analog0",
+			"Analog1",
+			"Analog2",
+			"Analog3",
+			"Sync_IN",
+			"Sync_OUT",
+			"USR_BTN",
+			"Left enable",
+			"Right enable",
+			"Dummy0",
+			"Dummy1",
+			"Marker State"
+		]
+
 	def logData(self, participantId):
 
 		with open('log_{}'.format(participantId), mode='w') as logFile:
 
 			logFile.write("{}\n".format(participantId))
-			logWriter = csv.writer(logFile, delimiter='	')
+			logWriter = csv.writer(logFile, delimiter='\t')
+
+			# Write Header.
+			logWriter.writerow(self.headerList)
 
 			receivedData = self.plotUpdater.receivedData
-			for row in receivedData:
-				logWriter.writerow(row)
+			logWriter.writerows(receivedData)

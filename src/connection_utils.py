@@ -66,5 +66,4 @@ class SocketCommunicator(QtCore.QObject):
 
 					# Send the data.
 					dataToSend = self.send_queue.get()
-					print (dataToSend)
 					self.socketConnection.sendall(dataToSend)
