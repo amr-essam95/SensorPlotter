@@ -74,12 +74,6 @@ class Styler:
 			}
 		"""
 
-		self.pauseButtonStyle = """
-			QPushButton {
-				qproperty-icon: url('../resources/pause.png');
-			}
-		"""
-
 		self.labelOnStyle = """
 			QLabel {
 				font-size: 20px;
