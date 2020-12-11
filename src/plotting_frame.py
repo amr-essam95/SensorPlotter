@@ -207,7 +207,7 @@ class PlottingFrame(QtWidgets.QFrame):
 
 	def createCurrentPlot(self):
 
-		self.currentPlot = self.createPlot('Current Plot', 'Current (deg)', 'Time (S)')
+		self.currentPlot = self.createPlot('Current Plot', 'Current (mA)', 'Time (S)')
 		self.rmReadoutLine = self.currentPlot.plot([], [], "RM_CurR", pen = self.styler.blackPen)
 		self.lmReadoutLine = self.currentPlot.plot([], [], "LM_CurR", pen = self.styler.blackDottedPen)
 		self.rmSentLine = self.currentPlot.plot([], [], "RM_CurS", pen = self.styler.bluePen)
