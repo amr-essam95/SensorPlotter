@@ -41,7 +41,7 @@ class SettingsFrame(QtWidgets.QFrame):
 
 	def createRunningSettings(self):
 
-		logoIcon = QtGui.QPixmap("../resources/myoswiss-K.png")
+		logoIcon = QtGui.QPixmap("resources/myoswiss-K.png")
 		logoLabel = QtWidgets.QLabel()
 		logoLabel.setPixmap(logoIcon)
 		logoLabel.setFixedHeight(30)
