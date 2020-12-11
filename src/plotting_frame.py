@@ -194,20 +194,20 @@ class PlottingFrame(QtWidgets.QFrame):
 
 	def createThighPlot(self):
 
-		self.thighPlot = self.createPlot('Thigh Plot', 'Thigh (deg)', 'Time (S)')
+		self.thighPlot = self.createPlot('', 'Thigh (deg)', 'Time (S)')
 		self.rtLine = self.thighPlot.plot([], [], "RT_AFlt", pen = self.styler.blackPen)
 		self.ltLine = self.thighPlot.plot([], [], "LT_AFlt", pen = self.styler.bluePen)
 		self.trLine = self.thighPlot.plot([], [], "Tr_AFlt", pen = self.styler.redPen)
 
 	def createShankPlot(self):
 
-		self.shankPlot = self.createPlot('Shank Plot', 'Shank (deg)', 'Time (S)')
+		self.shankPlot = self.createPlot('', 'Shank (deg)', 'Time (S)')
 		self.rsLine = self.shankPlot.plot([], [], "RS_AFlt", pen = self.styler.blackPen)
 		self.lsLine = self.shankPlot.plot([], [], "LS_AFlt", pen = self.styler.bluePen)
 
 	def createCurrentPlot(self):
 
-		self.currentPlot = self.createPlot('Current Plot', 'Current (mA)', 'Time (S)')
+		self.currentPlot = self.createPlot('', 'Current (mA)', 'Time (S)')
 		self.rmReadoutLine = self.currentPlot.plot([], [], "RM_CurR", pen = self.styler.blackPen)
 		self.lmReadoutLine = self.currentPlot.plot([], [], "LM_CurR", pen = self.styler.blackDottedPen)
 		self.rmSentLine = self.currentPlot.plot([], [], "RM_CurS", pen = self.styler.bluePen)
@@ -215,22 +215,22 @@ class PlottingFrame(QtWidgets.QFrame):
 
 	def createAnalog0Plot(self):
 
-		self.analog0Plot = self.createPlot('Analog 0', 'Ch0 (mV)', 'Time (S)')
+		self.analog0Plot = self.createPlot('', 'Ch0 (mV)', 'Time (S)')
 		self.analogLine0 = self.analog0Plot.plot([], [], "Analog 0", pen = self.styler.blackPen)
 
 	def createAnalog1Plot(self):
 
-		self.analog1Plot = self.createPlot('Analog 1', 'Ch1 (mV)', 'Time (S)')
+		self.analog1Plot = self.createPlot('', 'Ch1 (mV)', 'Time (S)')
 		self.analogLine1 = self.analog1Plot.plot([], [], "Analog 1", pen = self.styler.blackPen)
 
 	def createAnalog2Plot(self):
 
-		self.analog2Plot = self.createPlot('Analog 2', 'Ch2 (mV)', 'Time (S)')
+		self.analog2Plot = self.createPlot('', 'Ch2 (mV)', 'Time (S)')
 		self.analogLine2 = self.analog2Plot.plot([], [], "Analog 2", pen = self.styler.blackPen)
 
 	def createAnalog3Plot(self):
 
-		self.analog3Plot = self.createPlot('Analog 3', 'Ch3 (mV)', 'Time (S)')
+		self.analog3Plot = self.createPlot('', 'Ch3 (mV)', 'Time (S)')
 		self.analogLine3 = self.analog3Plot.plot([], [], "Analog 3", pen = self.styler.blackPen)
 
 	def manageLayouts(self):
