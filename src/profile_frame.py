@@ -40,7 +40,7 @@ class ProfileFrame(QtWidgets.QFrame):
 		self.profileLineEdit.setPlaceholderText("Profile path")
 		self.profileLineEdit.setEnabled(False)
 
-		browseIcon = QtGui.QIcon("../resources/browse.png")
+		browseIcon = QtGui.QIcon("resources/browse.png")
 		browseButton = QtWidgets.QPushButton()
 		browseButton.setIcon(browseIcon)
 		browseButton.setIconSize(QtCore.QSize(30,30))

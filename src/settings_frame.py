@@ -32,6 +32,7 @@ class SettingsFrame(QtWidgets.QFrame):
 		self.styler = Styler()
 
 		self.socketController = socketController
+		self.socketController.connectionStatusChanged.connect(self.onConnectionStatusChanged)
 
 		self.createRunningSettings()
 		self.createLoggingSettings()
@@ -51,14 +52,14 @@ class SettingsFrame(QtWidgets.QFrame):
 		logoLabelLayout.setContentsMargins(2,2,2,2)
 		logoLabelLayout.addWidget(logoLabel)
 
-		connectIcon = QtGui.QIcon("../resources/connect.png")
+		connectIcon = QtGui.QIcon("resources/connect.png")
 		self.connectButton = QtWidgets.QPushButton("  Connect")
 		self.connectButton.setToolTip("Connect to the server")
 		self.connectButton.setStyleSheet(self.styler.buttonStyle)
 		self.connectButton.clicked.connect(self.onConnectButtonClicked)
 		self.connectButton.setIcon(connectIcon)
 
-		streamIcon = QtGui.QIcon("../resources/stream.png")
+		streamIcon = QtGui.QIcon("resources/stream.png")
 		self.streamButton = QtWidgets.QPushButton("  Stream")
 		self.streamButton.setToolTip("Stream from the server")
 		self.streamButton.setStyleSheet(self.styler.buttonStyle)
@@ -111,7 +112,7 @@ class SettingsFrame(QtWidgets.QFrame):
 		self.participantIdLineEdit.setStyleSheet(self.styler.lineEditStyle)
 		self.participantIdLineEdit.setPlaceholderText("Participant Id")
 
-		logIcon = QtGui.QIcon("../resources/log.png")
+		logIcon = QtGui.QIcon("resources/log.png")
 		logButton = QtWidgets.QPushButton("  Log")
 		logButton.setToolTip("Connect to the server")
 		logButton.setStyleSheet(self.styler.buttonStyle)
@@ -197,9 +198,9 @@ class SettingsFrame(QtWidgets.QFrame):
 
 	# Slots
 
-	def onConnectButtonClicked(self):
+	def onConnectionStatusChanged(self, status):
 
-		self.connectionOpened = self.socketController.startConnection()
+		self.connectionOpened = status
 		if (self.connectionOpened):
 			self.connectionStatusLabel.setText("Status: Connected")
 			self.connectButton.setEnabled(False)
@@ -210,6 +211,10 @@ class SettingsFrame(QtWidgets.QFrame):
 			self.connectButton.setEnabled(True)
 			self.streamButton.setEnabled(False)
 
+	def onConnectButtonClicked(self):
+
+		self.socketController.startConnection()
+
 	def onStreamButtonClicked(self):
 
 		self.streaming, errMsg = self.socketController.startStreaming()
@@ -219,7 +224,6 @@ class SettingsFrame(QtWidgets.QFrame):
 		else:
 			self.streamButton.setEnabled(True)
 			self.addMessageToLogger("Streaming failed, {}".format(errMsg))
-
 
 	def onSetMarkerButtonClicked(self):
 
@@ -251,7 +255,5 @@ class SettingsFrame(QtWidgets.QFrame):
 
 	def onLogButtonClicked(self):
 		participantId = self.participantIdLineEdit.text().strip()
-
-
 		self.socketController.logData(participantId)
 		

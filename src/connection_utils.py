@@ -8,6 +8,7 @@ import queue
 
 class SocketCommunicator(QtCore.QObject):
 
+	connectionStatusChanged = QtCore.pyqtSignal(bool)
 	dataReady = QtCore.pyqtSignal(list)
 	labelDataReady = QtCore.pyqtSignal(bool, bool)
 
@@ -29,11 +30,11 @@ class SocketCommunicator(QtCore.QObject):
 			self.socketConnectionSucceeded = True
 			self.socketConnection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 			self.socketConnection.connect((self.hostname, self.port))
+			self.connectionStatusChanged.emit(True)
 
 		except:
+			self.connectionStatusChanged.emit(False)
 			self.socketConnectionSucceeded = False
-
-		return self.socketConnectionSucceeded
 
 	def sendData(self, data):
 		if self.socketConnectionSucceeded == True:

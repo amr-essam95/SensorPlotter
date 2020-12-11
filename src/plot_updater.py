@@ -69,16 +69,6 @@ class PlotUpdater(QtCore.QObject):
 
 		self.socketCommunicator = socketCommunicator
 
-	def run2(self):
-		print ("start listening2")
-		print(threading.current_thread().name)
-		print(threading.get_ident())
-
-	def run(self):
-		print ("start listening")
-		print(threading.current_thread().name)
-		print(threading.get_ident())
-
 	def onMarkerStateChanged(self, markerState):
 
 		self.markerState = markerState

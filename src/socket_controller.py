@@ -13,6 +13,8 @@ from plot_updater import PlotUpdater
 class SocketController(QtCore.QObject):
 
 	streamData = QtCore.pyqtSignal()
+	connectToSocket = QtCore.pyqtSignal()
+	connectionStatusChanged = QtCore.pyqtSignal(bool)
 	markerStateChanged = QtCore.pyqtSignal(int)
 
 	def __init__(self, parent=None):
@@ -25,6 +27,9 @@ class SocketController(QtCore.QObject):
 		self.desiredForceProfile = []
 		self.connectionSucceded = False
 		self.headerList = []
+
+		# This flag prevents serveral trials to connect at the same time.
+		self.connecting = False
 		
 		# Fill header list for the log file.
 		self.fillLogHeaderList()
@@ -44,9 +49,12 @@ class SocketController(QtCore.QObject):
 		parent.destroyed.connect(self.onParentDestroyed)
 
 		self.streamData.connect(self.socketCommunicator.receiveData)
+		self.connectToSocket.connect(self.socketCommunicator.connect)
 		self.thread.start()
 
 		self.socketCommunicator.dataReady.connect(self.plotUpdater.onDataReady)
+		self.socketCommunicator.connectionStatusChanged.connect(self.onConnectionStatusChanged)
+
 		self.markerStateChanged.connect(self.plotUpdater.onMarkerStateChanged)
 		self.updaterThread.start()
 		
@@ -61,13 +69,17 @@ class SocketController(QtCore.QObject):
 		self.thread = None
 		self.updaterThread = None
 
+	def onConnectionStatusChanged(self, status):
+
+		self.connectionSucceded = status
+		self.connecting = False
+		self.connectionStatusChanged.emit(self.connectionSucceded)
+
 	def startConnection(self):
 
-		if self.connectionSucceded == False:
-			self.connectionSucceded = self.socketCommunicator.connect()
-			return self.connectionSucceded
-		else:
-			return True
+		if self.connectionSucceded == False and self.connecting == False:
+			self.connecting =  True
+			self.connectToSocket.emit()
 
 	def sendData(self):
 		if self.connectionSucceded:

@@ -70,7 +70,7 @@ class Styler:
 
 		self.enableButtonStyle = """
 			QPushButton {
-				qproperty-icon: url('../resources/path847.png');
+				qproperty-icon: url('resources/path847.png');
 			}
 		"""
 
