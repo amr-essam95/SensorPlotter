@@ -19,7 +19,7 @@ class ProfileFrame(QtWidgets.QFrame):
 		self.profilePlotFrame = ""
 		self.profileLineEdit = ""
 		self.profilePlot = ""
-		self.profileIntList = []
+		self.profileIntList = [0] * 100
 
 		self.styler = Styler()
 

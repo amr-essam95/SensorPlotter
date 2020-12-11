@@ -24,7 +24,7 @@ class SocketController(QtCore.QObject):
 		self.magnitudeLx = 0
 		self.magnitudeRx = 0
 		self.markerState = 0
-		self.desiredForceProfile = []
+		self.desiredForceProfile = [0] * 100
 		self.connectionSucceded = False
 		self.headerList = []
 
