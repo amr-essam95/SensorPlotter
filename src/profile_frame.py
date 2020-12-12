@@ -1,6 +1,7 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QColor
+from PyQt5.QtWidgets import QFrame, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit
+from PyQt5.QtCore import QSize
+from PyQt5.QtGui import QIcon
+
 import sys
 sys.path.append(".")
 from styler import Styler
@@ -11,7 +12,7 @@ import pyqtgraph as pg
 
 import csv
 
-class ProfileFrame(QtWidgets.QFrame): 
+class ProfileFrame(QFrame): 
 	def __init__(self, socketController, parent=None): 
 		super().__init__(parent)
 
@@ -31,42 +32,42 @@ class ProfileFrame(QtWidgets.QFrame):
 
 	def createProfileButtons(self):
 
-		chooseProfileLabel = QtWidgets.QLabel("Choose Profile")
+		chooseProfileLabel = QLabel("Choose Profile")
 		chooseProfileLabel.setMaximumHeight(40)
 		chooseProfileLabel.setStyleSheet(self.styler.labelStyle)
 
-		self.profileLineEdit = QtWidgets.QLineEdit()
+		self.profileLineEdit = QLineEdit()
 		self.profileLineEdit.setStyleSheet(self.styler.browseLineEditStyle)
 		self.profileLineEdit.setPlaceholderText("Profile path")
 		self.profileLineEdit.setEnabled(False)
 
-		browseIcon = QtGui.QIcon("resources/browse.png")
-		browseButton = QtWidgets.QPushButton()
+		browseIcon = QIcon("resources/browse.png")
+		browseButton = QPushButton()
 		browseButton.setIcon(browseIcon)
-		browseButton.setIconSize(QtCore.QSize(30,30))
+		browseButton.setIconSize(QSize(30,30))
 		browseButton.clicked.connect(self.onBrowseButtonClicked)
 
-		lineEditLayout = QtWidgets.QHBoxLayout()
+		lineEditLayout = QHBoxLayout()
 		lineEditLayout.setContentsMargins(0,0,0,0)
 		lineEditLayout.addWidget(self.profileLineEdit)
 		lineEditLayout.addWidget(browseButton)
 
-		lineEditFrame = QtWidgets.QFrame()
+		lineEditFrame = QFrame()
 		lineEditFrame.setLayout(lineEditLayout)
 		lineEditFrame.setStyleSheet(self.styler.browseLineEditFrame)
 
-		setProfileButton = QtWidgets.QPushButton("Set Profile")
+		setProfileButton = QPushButton("Set Profile")
 		setProfileButton.setToolTip("Set desired force profile")
 		setProfileButton.setStyleSheet(self.styler.buttonStyle)
 		setProfileButton.clicked.connect(self.onSetProfileClicked)
 
-		profileButtonsLayout = QtWidgets.QVBoxLayout()
+		profileButtonsLayout = QVBoxLayout()
 		profileButtonsLayout.addWidget(chooseProfileLabel)
 		profileButtonsLayout.addWidget(lineEditFrame)
 		profileButtonsLayout.addStretch()
 		profileButtonsLayout.addWidget(setProfileButton)
 		
-		self.profileButtonsFrame = QtWidgets.QFrame()
+		self.profileButtonsFrame = QFrame()
 		self.profileButtonsFrame.setLayout(profileButtonsLayout)
 
 	def createProfilePlot(self):
@@ -88,22 +89,21 @@ class ProfileFrame(QtWidgets.QFrame):
 		self.profilePlot.setLabel('left', 'Current (mA)', **styles)
 		self.profilePlot.setLabel('bottom', 'Gait cycle (%)', **styles)
 
-		profilePlotLayout = QtWidgets.QVBoxLayout()
-		# profilePlotLayout.addWidget(toolbar)
+		profilePlotLayout = QVBoxLayout()
 		profilePlotLayout.addWidget(self.profilePlot)
 
-		self.profilePlotFrame = QtWidgets.QFrame()
+		self.profilePlotFrame = QFrame()
 		self.profilePlotFrame.setLayout(profilePlotLayout)
 
 	def manageLayouts(self):
 
-		seperatorFrame = QtWidgets.QFrame()
+		seperatorFrame = QFrame()
 		seperatorFrame.setFixedWidth(1)
 		seperatorFrame.setStyleSheet(self.styler.seperatorStyle)
-		seperatorFrame.setFrameShape(QtWidgets.QFrame.VLine)
-		seperatorFrame.setFrameShadow(QtWidgets.QFrame.Sunken)
+		seperatorFrame.setFrameShape(QFrame.VLine)
+		seperatorFrame.setFrameShadow(QFrame.Sunken)
 		
-		mainLayout = QtWidgets.QHBoxLayout()
+		mainLayout = QHBoxLayout()
 		mainLayout.setContentsMargins(2,2,2,2)
 		mainLayout.setSpacing(10)
 		mainLayout.addWidget(self.profileButtonsFrame, 1)
@@ -132,7 +132,7 @@ class ProfileFrame(QtWidgets.QFrame):
 
 	def onBrowseButtonClicked(self):
 
-		profileFileTuple = QtWidgets.QFileDialog.getOpenFileName(self, "Select Profile File", ".", "All files (*.*)")
+		profileFileTuple = QFileDialog.getOpenFileName(self, "Select Profile File", ".", "All files (*.*)")
 		profileFilePath = profileFileTuple[0]
 		if profileFilePath and os.path.exists(profileFilePath):
 			self.profileLineEdit.setText(profileFilePath)

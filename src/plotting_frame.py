@@ -1,6 +1,6 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QColor
+from PyQt5.QtWidgets import QFrame, QPushButton, QVBoxLayout, QHBoxLayout, QLabel
+from PyQt5.QtCore import Qt, QSize
+
 import sys
 sys.path.append(".")
 from styler import Styler
@@ -8,7 +8,7 @@ from styler import Styler
 from pyqtgraph import PlotWidget, plot
 import pyqtgraph as pg
 
-class PlottingFrame(QtWidgets.QFrame): 
+class PlottingFrame(QFrame): 
 	def __init__(self, socketController, parent=None): 
 		super().__init__()
 
@@ -85,14 +85,14 @@ class PlottingFrame(QtWidgets.QFrame):
 		self.createShankPlot()
 		self.createCurrentPlot()
 
-		anglePlotsLayout = QtWidgets.QVBoxLayout()
+		anglePlotsLayout = QVBoxLayout()
 		anglePlotsLayout.setContentsMargins(5,5,10,5)
 		anglePlotsLayout.setSpacing(0)
 		anglePlotsLayout.addWidget(self.thighPlot)
 		anglePlotsLayout.addWidget(self.shankPlot)
 		anglePlotsLayout.addWidget(self.currentPlot)
 
-		self.anglePlotsFrame = QtWidgets.QFrame()
+		self.anglePlotsFrame = QFrame()
 		self.styler.addShadow(self.anglePlotsFrame)
 		self.anglePlotsFrame.setLayout(anglePlotsLayout)
 
@@ -103,7 +103,7 @@ class PlottingFrame(QtWidgets.QFrame):
 		self.createAnalog2Plot()
 		self.createAnalog3Plot()
 
-		analogPlotsLayout = QtWidgets.QVBoxLayout()
+		analogPlotsLayout = QVBoxLayout()
 		analogPlotsLayout.setContentsMargins(5,5,10,5)
 		analogPlotsLayout.setSpacing(0)
 		analogPlotsLayout.addWidget(self.analog0Plot)
@@ -111,63 +111,63 @@ class PlottingFrame(QtWidgets.QFrame):
 		analogPlotsLayout.addWidget(self.analog2Plot)
 		analogPlotsLayout.addWidget(self.analog3Plot)
 
-		self.analogPlotsFrame = QtWidgets.QFrame()
+		self.analogPlotsFrame = QFrame()
 		self.styler.addShadow(self.analogPlotsFrame)
 		self.analogPlotsFrame.setLayout(analogPlotsLayout)
 
 	def createButtonsFrame(self):
 
-		self.enableLabel = QtWidgets.QPushButton("Enable")
+		self.enableLabel = QPushButton("Enable")
 		self.enableLabel.setStyleSheet(self.styler.enableLabel)
 		self.enableLabel.clicked.connect(self.onEnableButtonClicked)
 
-		self.enableButton = QtWidgets.QPushButton()
+		self.enableButton = QPushButton()
 		self.enableButton.setToolTip("Enable")
 		self.enableButton.setStyleSheet(self.styler.enableButtonStyle)
-		self.enableButton.setIconSize(QtCore.QSize(70,70))
+		self.enableButton.setIconSize(QSize(70,70))
 		self.enableButton.clicked.connect(self.onEnableButtonClicked)
 
-		enableButtonLayout = QtWidgets.QVBoxLayout()
+		enableButtonLayout = QVBoxLayout()
 		enableButtonLayout.setSpacing(5)
 		enableButtonLayout.setContentsMargins(0,0,0,0)
 		enableButtonLayout.addWidget(self.enableButton)
 		enableButtonLayout.addWidget(self.enableLabel)
 
-		enableButtonFrame = QtWidgets.QFrame()
+		enableButtonFrame = QFrame()
 		enableButtonFrame.setLayout(enableButtonLayout)
 
-		self.syncLabel = QtWidgets.QLabel("SYNC")
+		self.syncLabel = QLabel("SYNC")
 		self.syncLabel.setStyleSheet(self.styler.labelOffStyle)
-		self.syncLabel.setAlignment(QtCore.Qt.AlignCenter)
+		self.syncLabel.setAlignment(Qt.AlignCenter)
 
-		syncLayout = QtWidgets.QHBoxLayout()
-		syncLayout.addWidget(self.syncLabel, QtCore.Qt.AlignCenter)
+		syncLayout = QHBoxLayout()
+		syncLayout.addWidget(self.syncLabel, Qt.AlignCenter)
 
-		self.syncFrame = QtWidgets.QFrame()
+		self.syncFrame = QFrame()
 		self.syncFrame.setStyleSheet(self.styler.labelFrameOffStyle)
-		self.syncFrame.setFixedSize(QtCore.QSize(80,80))
+		self.syncFrame.setFixedSize(QSize(80,80))
 		self.syncFrame.setLayout(syncLayout)
 
-		self.userLabel = QtWidgets.QLabel("USR")
+		self.userLabel = QLabel("USR")
 		self.userLabel.setStyleSheet(self.styler.labelOffStyle)
-		self.userLabel.setAlignment(QtCore.Qt.AlignCenter)
+		self.userLabel.setAlignment(Qt.AlignCenter)
 
-		userLayout = QtWidgets.QHBoxLayout()
-		userLayout.addWidget(self.userLabel, QtCore.Qt.AlignCenter)
+		userLayout = QHBoxLayout()
+		userLayout.addWidget(self.userLabel, Qt.AlignCenter)
 
-		self.userFrame = QtWidgets.QFrame()
+		self.userFrame = QFrame()
 		self.userFrame.setStyleSheet(self.styler.labelFrameOffStyle)
-		self.userFrame.setFixedSize(QtCore.QSize(80,80))
+		self.userFrame.setFixedSize(QSize(80,80))
 		self.userFrame.setLayout(userLayout)
 
-		buttonsLayout = QtWidgets.QVBoxLayout()
+		buttonsLayout = QVBoxLayout()
 		buttonsLayout.setContentsMargins(20,20,20,20)
-		buttonsLayout.setAlignment(QtCore.Qt.AlignHCenter)
-		buttonsLayout.addWidget(enableButtonFrame, 0, QtCore.Qt.AlignTop)
+		buttonsLayout.setAlignment(Qt.AlignHCenter)
+		buttonsLayout.addWidget(enableButtonFrame, 0, Qt.AlignTop)
 		buttonsLayout.addWidget(self.syncFrame)
-		buttonsLayout.addWidget(self.userFrame, 0, QtCore.Qt.AlignBottom)
+		buttonsLayout.addWidget(self.userFrame, 0, Qt.AlignBottom)
 
-		self.buttonsFrame = QtWidgets.QFrame()
+		self.buttonsFrame = QFrame()
 		self.buttonsFrame.setLayout(buttonsLayout)
 		self.styler.addShadow(self.buttonsFrame)
 
@@ -237,7 +237,7 @@ class PlottingFrame(QtWidgets.QFrame):
 
 	def manageLayouts(self):
 		
-		mainLayout = QtWidgets.QHBoxLayout()
+		mainLayout = QHBoxLayout()
 		mainLayout.setContentsMargins(2,2,2,2)
 		mainLayout.setSpacing(10)
 		mainLayout.addWidget(self.anglePlotsFrame, 2)

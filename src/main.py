@@ -1,12 +1,11 @@
+from PyQt5.QtWidgets import QApplication
+from main_window import MainWindow
+
 import sys
 sys.path.append(".")
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt
-from main_window import MainWindow
-
 # create pyqt5 app 
-App = QtWidgets.QApplication(sys.argv) 
+App = QApplication(sys.argv) 
   
 # create the instance of our Window 
 window = MainWindow()

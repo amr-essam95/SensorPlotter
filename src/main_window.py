@@ -1,6 +1,5 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QColor
+from PyQt5.QtWidgets import QFrame, QVBoxLayout, QHBoxLayout, QMainWindow
+
 import sys
 sys.path.append(".")
 from styler import Styler
@@ -8,7 +7,7 @@ from settings_frame import SettingsFrame
 from plotting_frame import PlottingFrame
 from socket_controller import SocketController
 
-class MainWindow(QtWidgets.QMainWindow): 
+class MainWindow(QMainWindow): 
     def __init__(self): 
         super().__init__() 
 
@@ -47,13 +46,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def manageLayouts(self):
 
-        mainLayout = QtWidgets.QVBoxLayout()
+        mainLayout = QVBoxLayout()
         mainLayout.setContentsMargins(10,10,10,10)
         mainLayout.setSpacing(10)
         mainLayout.addWidget(self.settingsFrame,2)
         mainLayout.addWidget(self.plottingAreaFrame,5)
 
-        mainFrame = QtWidgets.QFrame(self)
+        mainFrame = QFrame(self)
         mainFrame.setLayout(mainLayout)
         self.setCentralWidget(mainFrame)
 

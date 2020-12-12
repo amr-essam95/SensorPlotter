@@ -1,16 +1,16 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import QObject, pyqtSignal
+
 import socket
 import struct
 import threading
 import select
 import queue
 
-class SocketCommunicator(QtCore.QObject):
+class SocketCommunicator(QObject):
 
-	connectionStatusChanged = QtCore.pyqtSignal(bool)
-	dataReady = QtCore.pyqtSignal(list)
-	labelDataReady = QtCore.pyqtSignal(bool, bool)
+	connectionStatusChanged = pyqtSignal(bool)
+	dataReady = pyqtSignal(list)
+	labelDataReady = pyqtSignal(bool, bool)
 
 	def __init__(self, parent=None):
 		super(SocketCommunicator, self).__init__(parent)

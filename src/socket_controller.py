@@ -1,5 +1,4 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QObject, pyqtSignal, QThread
 import sys
 import csv
 import struct
@@ -10,12 +9,12 @@ from connection_utils import SocketCommunicator
 from plot_updater import PlotUpdater
 
 
-class SocketController(QtCore.QObject):
+class SocketController(QObject):
 
-	streamData = QtCore.pyqtSignal()
-	connectToSocket = QtCore.pyqtSignal()
-	connectionStatusChanged = QtCore.pyqtSignal(bool)
-	markerStateChanged = QtCore.pyqtSignal(int)
+	streamData = pyqtSignal()
+	connectToSocket = pyqtSignal()
+	connectionStatusChanged = pyqtSignal(bool)
+	markerStateChanged = pyqtSignal(int)
 
 	def __init__(self, parent=None):
 		super(SocketController, self).__init__(parent)
@@ -36,13 +35,13 @@ class SocketController(QtCore.QObject):
 
 		# Create new thread for handling socket communication.
 		self.socketCommunicator = SocketCommunicator()
-		self.thread = QtCore.QThread(self)
+		self.thread = QThread(self)
 		self.thread.setTerminationEnabled(True)
 		self.socketCommunicator.moveToThread(self.thread)
 
 		# Create new thread for updating graphs.
 		self.plotUpdater = PlotUpdater(self.socketCommunicator)
-		self.updaterThread = QtCore.QThread(self)
+		self.updaterThread = QThread(self)
 		self.updaterThread.setTerminationEnabled(True)
 		self.plotUpdater.moveToThread(self.updaterThread)
 

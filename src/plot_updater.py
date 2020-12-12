@@ -1,20 +1,13 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QColor
+from PyQt5.QtCore import QObject
+
 import sys
-import struct
-
-from styler import Styler
-
-from pyqtgraph import PlotWidget, plot
-import pyqtgraph as pg
-
 sys.path.append(".")
+from styler import Styler
 from connection_utils import SocketCommunicator
 from qt_thread_updater import get_updater
 import threading
 
-class PlotUpdater(QtCore.QObject):
+class PlotUpdater(QObject):
 
 	def __init__(self, socketCommunicator, parent=None):
 		super(PlotUpdater, self).__init__(parent)
