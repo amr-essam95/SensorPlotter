@@ -21,7 +21,11 @@ class SettingsFrame(QtWidgets.QFrame):
 		self.connectButton = ""
 		self.streamButton = ""
 		self.magnitudeLxLabel = ""
+		self.magnitudeLxInput  = ""
+		self.magnitudeLxSlider = ""
 		self.magnitudeRxLabel = ""
+		self.magnitudeRxInput = ""
+		self.magnitudeRxSlider = ""
 		self.participantIdLineEdit = ""
 		self.setMarkerButton = ""
 
@@ -131,31 +135,53 @@ class SettingsFrame(QtWidgets.QFrame):
 
 	def createSlidersSettings(self):
 
-		self.magnitudeLxLabel = QtWidgets.QLabel("Magnitude Scaling Lx : 0")
+		self.magnitudeLxLabel = QtWidgets.QLabel("Magnitude Scaling Lx :")
 		self.magnitudeLxLabel.setStyleSheet(self.styler.labelStyle)
 
-		magnitudeLxSlider = QtWidgets.QSlider(Qt.Horizontal)
-		magnitudeLxSlider.setMinimum(0)
-		magnitudeLxSlider.setMaximum(100)
-		magnitudeLxSlider.setSingleStep(1)
-		magnitudeLxSlider.setTickInterval(10)
-		magnitudeLxSlider.setTickPosition(QtWidgets.QSlider.TicksBelow)
-		magnitudeLxSlider.setTracking(False)
-		magnitudeLxSlider.valueChanged.connect(self.magnitudeLxSliderValueChanged)
-		magnitudeLxSlider.sliderMoved.connect(self.magnitudeLxSliderMoved)
+		self.magnitudeLxInput = QtWidgets.QLineEdit("0")
 
-		self.magnitudeRxLabel = QtWidgets.QLabel("Magnitude Scaling Rx : 0")
+		lxValidator = QtGui.QIntValidator(0, 100)
+		self.magnitudeLxInput.setValidator(lxValidator)
+		self.magnitudeLxInput.textChanged.connect(self.magnitudeLxInputChanged)
+
+		magnitudeLxLayout = QtWidgets.QHBoxLayout()
+		magnitudeLxLayout.setSpacing(2)
+		magnitudeLxLayout.addWidget(self.magnitudeLxLabel)
+		magnitudeLxLayout.addWidget(self.magnitudeLxInput)
+
+		self.magnitudeLxSlider = QtWidgets.QSlider(Qt.Horizontal)
+		self.magnitudeLxSlider.setMinimum(0)
+		self.magnitudeLxSlider.setMaximum(100)
+		self.magnitudeLxSlider.setSingleStep(1)
+		self.magnitudeLxSlider.setTickInterval(10)
+		self.magnitudeLxSlider.setTickPosition(QtWidgets.QSlider.TicksBelow)
+		self.magnitudeLxSlider.setTracking(False)
+		self.magnitudeLxSlider.valueChanged.connect(self.magnitudeLxSliderValueChanged)
+		self.magnitudeLxSlider.sliderMoved.connect(self.magnitudeLxSliderMoved)
+
+		self.magnitudeRxLabel = QtWidgets.QLabel("Magnitude Scaling Rx :")
 		self.magnitudeRxLabel.setStyleSheet(self.styler.labelStyle)
 
-		magnitudeRxSlider = QtWidgets.QSlider(Qt.Horizontal)
-		magnitudeRxSlider.setMinimum(0)
-		magnitudeRxSlider.setMaximum(100)
-		magnitudeRxSlider.setSingleStep(1)
-		magnitudeRxSlider.setTickInterval(10)
-		magnitudeRxSlider.setTickPosition(QtWidgets.QSlider.TicksBelow)
-		magnitudeRxSlider.setTracking(False)
-		magnitudeRxSlider.valueChanged.connect(self.magnitudeRxSliderValueChanged)
-		magnitudeRxSlider.sliderMoved.connect(self.magnitudeRxSliderMoved)
+		self.magnitudeRxInput = QtWidgets.QLineEdit("0")
+
+		rxValidator = QtGui.QIntValidator(0, 100)
+		self.magnitudeRxInput.setValidator(rxValidator)
+		self.magnitudeRxInput.textChanged.connect(self.magnitudeRxInputChanged)
+
+		magnitudeRxLayout = QtWidgets.QHBoxLayout()
+		magnitudeRxLayout.setSpacing(2)
+		magnitudeRxLayout.addWidget(self.magnitudeRxLabel)
+		magnitudeRxLayout.addWidget(self.magnitudeRxInput)
+
+		self.magnitudeRxSlider = QtWidgets.QSlider(Qt.Horizontal)
+		self.magnitudeRxSlider.setMinimum(0)
+		self.magnitudeRxSlider.setMaximum(100)
+		self.magnitudeRxSlider.setSingleStep(1)
+		self.magnitudeRxSlider.setTickInterval(10)
+		self.magnitudeRxSlider.setTickPosition(QtWidgets.QSlider.TicksBelow)
+		self.magnitudeRxSlider.setTracking(False)
+		self.magnitudeRxSlider.valueChanged.connect(self.magnitudeRxSliderValueChanged)
+		self.magnitudeRxSlider.sliderMoved.connect(self.magnitudeRxSliderMoved)
 
 		self.setMarkerButton = QtWidgets.QPushButton("Set Marker")
 		self.setMarkerButton.setToolTip("Set marker in log data")
@@ -164,10 +190,10 @@ class SettingsFrame(QtWidgets.QFrame):
 
 		slidersSettingsLayout = QtWidgets.QVBoxLayout()
 		slidersSettingsLayout.addSpacing(8)
-		slidersSettingsLayout.addWidget(self.magnitudeLxLabel)
-		slidersSettingsLayout.addWidget(magnitudeLxSlider)
-		slidersSettingsLayout.addWidget(self.magnitudeRxLabel)
-		slidersSettingsLayout.addWidget(magnitudeRxSlider)
+		slidersSettingsLayout.addLayout(magnitudeLxLayout)
+		slidersSettingsLayout.addWidget(self.magnitudeLxSlider)
+		slidersSettingsLayout.addLayout(magnitudeRxLayout)
+		slidersSettingsLayout.addWidget(self.magnitudeRxSlider)
 		slidersSettingsLayout.addWidget(self.setMarkerButton)
 
 		self.slidersSettingsFrame = QtWidgets.QFrame()
@@ -242,18 +268,33 @@ class SettingsFrame(QtWidgets.QFrame):
 
 	def magnitudeLxSliderMoved(self, value):
 
-		self.magnitudeLxLabel.setText("Magnitude Scaling Lx : {}".format(value))
+		self.magnitudeLxInput.setText("{}".format(value))
 
 	def magnitudeRxSliderValueChanged(self, value):
-
+		
 		self.magnitudeRxSliderMoved(value)
 		self.socketController.magnitudeScalingRXChanged(value)
 
 	def magnitudeRxSliderMoved(self, value):
 
-		self.magnitudeRxLabel.setText("Magnitude Scaling Rx : {}".format(value))
+		self.magnitudeRxInput.setText("{}".format(value))
 
 	def onLogButtonClicked(self):
 		participantId = self.participantIdLineEdit.text().strip()
 		self.socketController.logData(participantId)
+
+	def magnitudeLxInputChanged(self, value):
 		
+		if value == "":
+			value = 0
+		else:
+			value = int(value)
+		self.magnitudeLxSlider.setValue(value)
+
+	def magnitudeRxInputChanged(self, value):
+		
+		if value == "":
+			value = 0
+		else:
+			value = int(value)
+		self.magnitudeRxSlider.setValue(value)
