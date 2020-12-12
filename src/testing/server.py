@@ -11,6 +11,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.listen()
     conn, addr = s.accept()
     timeStamp = 0
+    timeStampNano = 0
     with conn:
         print('Connected by', addr)
         while True:
@@ -24,8 +25,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             # print("Finished Parsing.\n\n")
             time.sleep(10/1000)
 
-            timeStamp = timeStamp + 1
-            timeStampNano = 10
+            
+            timeStampNano = timeStampNano + 10000000
+            if timeStampNano > (1E9):
+                timeStampNano = 0
+                timeStamp = timeStamp + 1
+
             rsAngle = random.randint(0,36000)
             lsAngle = random.randint(0,36000)
             rtAngle = random.randint(0,36000)

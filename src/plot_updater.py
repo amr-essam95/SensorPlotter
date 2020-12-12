@@ -79,6 +79,7 @@ class PlotUpdater(QtCore.QObject):
 		self.receivedData.append(structList)
 		
 		time = structList[0]
+		timeNs = structList[1]
 		rt = structList[4]
 		lt = structList[5]
 		tr = structList[6]
@@ -93,11 +94,13 @@ class PlotUpdater(QtCore.QObject):
 		analog2 = structList[15]
 		analog3 = structList[16]
 
-		if (len(self.time) > 20):
+		if (len(self.time) > 30):
 			self.removeFirstElement = True
 		
 		if (self.removeFirstElement):
 			self.time = self.time[1:]
+
+		collectiveTime = time + (timeNs * 1E-9)
 
 		self.time.append(time)
 
