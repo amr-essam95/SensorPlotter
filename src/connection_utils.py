@@ -57,8 +57,8 @@ class SocketCommunicator(QtCore.QObject):
 						structList = struct.unpack("iiiiiiihhHHHHHHHHBBBhhhh",data)
 						self.dataReady.emit(list(structList))
 						self.labelDataReady.emit(structList[17], structList[19])
-					except:
-						print ("Wrong format of data is received.")
+					except struct.error as error:
+						print ("Wrong format of data is received, {}".format(error))
 				else:
 					# Ready_socket is rsock
 

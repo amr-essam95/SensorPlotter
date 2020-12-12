@@ -86,7 +86,7 @@ class PlottingFrame(QtWidgets.QFrame):
 		self.createCurrentPlot()
 
 		anglePlotsLayout = QtWidgets.QVBoxLayout()
-		anglePlotsLayout.setContentsMargins(10,10,10,10)
+		anglePlotsLayout.setContentsMargins(5,5,10,5)
 		anglePlotsLayout.setSpacing(0)
 		anglePlotsLayout.addWidget(self.thighPlot)
 		anglePlotsLayout.addWidget(self.shankPlot)
@@ -104,7 +104,7 @@ class PlottingFrame(QtWidgets.QFrame):
 		self.createAnalog3Plot()
 
 		analogPlotsLayout = QtWidgets.QVBoxLayout()
-		analogPlotsLayout.setContentsMargins(10,10,10,10)
+		analogPlotsLayout.setContentsMargins(5,5,10,5)
 		analogPlotsLayout.setSpacing(0)
 		analogPlotsLayout.addWidget(self.analog0Plot)
 		analogPlotsLayout.addWidget(self.analog1Plot)
@@ -190,18 +190,20 @@ class PlottingFrame(QtWidgets.QFrame):
 		plot.setLabel('left', xLabel, **styles)
 		plot.setLabel('bottom', yLabel, **styles)
 
+		plot.setContentsMargins(0,0,0,0)
+
 		return plot
 
 	def createThighPlot(self):
 
-		self.thighPlot = self.createPlot('', 'Thigh (deg)', 'Time (S)')
+		self.thighPlot = self.createPlot('', 'Thigh (deg)', '')
 		self.rtLine = self.thighPlot.plot([], [], "RT_AFlt", pen = self.styler.blackPen)
 		self.ltLine = self.thighPlot.plot([], [], "LT_AFlt", pen = self.styler.bluePen)
 		self.trLine = self.thighPlot.plot([], [], "Tr_AFlt", pen = self.styler.redPen)
 
 	def createShankPlot(self):
 
-		self.shankPlot = self.createPlot('', 'Shank (deg)', 'Time (S)')
+		self.shankPlot = self.createPlot('', 'Shank (deg)', '')
 		self.rsLine = self.shankPlot.plot([], [], "RS_AFlt", pen = self.styler.blackPen)
 		self.lsLine = self.shankPlot.plot([], [], "LS_AFlt", pen = self.styler.bluePen)
 
@@ -215,17 +217,17 @@ class PlottingFrame(QtWidgets.QFrame):
 
 	def createAnalog0Plot(self):
 
-		self.analog0Plot = self.createPlot('', 'Ch0 (mV)', 'Time (S)')
+		self.analog0Plot = self.createPlot('', 'Ch0 (mV)', '')
 		self.analogLine0 = self.analog0Plot.plot([], [], "Analog 0", pen = self.styler.blackPen)
 
 	def createAnalog1Plot(self):
 
-		self.analog1Plot = self.createPlot('', 'Ch1 (mV)', 'Time (S)')
+		self.analog1Plot = self.createPlot('', 'Ch1 (mV)', '')
 		self.analogLine1 = self.analog1Plot.plot([], [], "Analog 1", pen = self.styler.blackPen)
 
 	def createAnalog2Plot(self):
 
-		self.analog2Plot = self.createPlot('', 'Ch2 (mV)', 'Time (S)')
+		self.analog2Plot = self.createPlot('', 'Ch2 (mV)', '')
 		self.analogLine2 = self.analog2Plot.plot([], [], "Analog 2", pen = self.styler.blackPen)
 
 	def createAnalog3Plot(self):

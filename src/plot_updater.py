@@ -102,7 +102,7 @@ class PlotUpdater(QtCore.QObject):
 
 		collectiveTime = time + (timeNs * 1E-9)
 
-		self.time.append(time)
+		self.time.append(collectiveTime)
 
 		self.onThighDataReady(rt, lt, tr)
 		self.onShankDataReady(rs, ls)
@@ -113,9 +113,6 @@ class PlotUpdater(QtCore.QObject):
 		self.onAnalog3DataReady(analog3)
 
 	def onThighDataReady(self, rt, lt, tr):
-
-		# print(threading.current_thread().name)
-		# print(threading.get_ident())
 
 		if self.removeFirstElement:
 			self.rtData = self.rtData[1:]
