@@ -21,6 +21,7 @@ class PlottingFrame(QFrame):
 		self.syncFrame = ""
 		self.userFrame = ""
 		self.enableLabel = ""
+		self.legendLayout = ""
 
 		self.enableState = 0
 
@@ -78,9 +79,59 @@ class PlottingFrame(QFrame):
 		self.createAnalogPlotsFrame()
 		self.createButtonsFrame()
 		self.manageLayouts()
+	
+	def createAnglePlotsLegend(self):
+
+		rxBox = QFrame()
+		rxBox.setStyleSheet(self.styler.rxLegendBox)
+		rxBox.setFixedSize(QSize(15,15))
+
+		rxLabel = QLabel("RX")
+		rxLabel.setStyleSheet(self.styler.rxLegendLabel)
+
+		rxLegendLayout = QHBoxLayout()
+		rxLegendLayout.setSpacing(10)
+		rxLegendLayout.addWidget(rxBox)
+		rxLegendLayout.addWidget(rxLabel)
+		rxLegendLayout.setContentsMargins(5,5,5,5)
+
+		lxBox = QFrame()
+		lxBox.setStyleSheet(self.styler.lxLegendBox)
+		lxBox.setFixedSize(QSize(15,15))
+
+		lxLabel = QLabel("LX")
+		lxLabel.setStyleSheet(self.styler.lxLegendLabel)
+
+		lxLegendLayout = QHBoxLayout()
+		lxLegendLayout.setSpacing(10)
+		lxLegendLayout.addWidget(lxBox)
+		lxLegendLayout.addWidget(lxLabel)
+		lxLegendLayout.setContentsMargins(0,0,0,0)
+
+		trunkBox = QFrame()
+		trunkBox.setStyleSheet(self.styler.trunkLegendBox)
+		trunkBox.setFixedSize(QSize(15,15))
+
+		trunkLabel = QLabel("Trunk")
+		trunkLabel.setStyleSheet(self.styler.trunkLegendLabel)
+
+		trunkLegendLayout = QHBoxLayout()
+		trunkLegendLayout.setSpacing(10)
+		trunkLegendLayout.addWidget(trunkBox)
+		trunkLegendLayout.addWidget(trunkLabel)
+		trunkLegendLayout.setContentsMargins(0,0,0,0)
+
+		self.legendLayout = QHBoxLayout()
+		self.legendLayout.setSpacing(20)
+		self.legendLayout.addLayout(rxLegendLayout)
+		self.legendLayout.addLayout(lxLegendLayout)
+		self.legendLayout.addLayout(trunkLegendLayout)
+		self.legendLayout.setAlignment(Qt.AlignHCenter)
+		self.legendLayout.setContentsMargins(2,2,2,2)
 
 	def createAnglePlotsFrame(self):
 
+		self.createAnglePlotsLegend()
 		self.createThighPlot()
 		self.createShankPlot()
 		self.createCurrentPlot()
@@ -88,6 +139,7 @@ class PlottingFrame(QFrame):
 		anglePlotsLayout = QVBoxLayout()
 		anglePlotsLayout.setContentsMargins(5,5,10,5)
 		anglePlotsLayout.setSpacing(0)
+		anglePlotsLayout.addLayout(self.legendLayout)
 		anglePlotsLayout.addWidget(self.thighPlot)
 		anglePlotsLayout.addWidget(self.shankPlot)
 		anglePlotsLayout.addWidget(self.currentPlot)
@@ -197,9 +249,9 @@ class PlottingFrame(QFrame):
 	def createThighPlot(self):
 
 		self.thighPlot = self.createPlot('', 'Thigh (deg)', '')
-		self.rtLine = self.thighPlot.plot([], [], "RT_AFlt", pen = self.styler.blackPen)
-		self.ltLine = self.thighPlot.plot([], [], "LT_AFlt", pen = self.styler.bluePen)
-		self.trLine = self.thighPlot.plot([], [], "Tr_AFlt", pen = self.styler.redPen)
+		self.rtLine = self.thighPlot.plot([], [], "RT_AFlt", pen = self.styler.blackPen, name = "RX")
+		self.ltLine = self.thighPlot.plot([], [], "LT_AFlt", pen = self.styler.bluePen, name = "LX")
+		self.trLine = self.thighPlot.plot([], [], "Tr_AFlt", pen = self.styler.redPen, name = "Trunk")
 
 	def createShankPlot(self):
 

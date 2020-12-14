@@ -23,7 +23,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             # print (rcvStruct)
             # # print (struct.calcsize("?BB?100HHH"))
             # print("Finished Parsing.\n\n")
-            # time.sleep(5)
+            # time.sleep(2)
             time.sleep(10/1000)
 
             
@@ -55,6 +55,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             dummy1 = 0
             dummy2 = 0
 
-            structData = struct.pack('iiiiiiihhHHHHHHHHBBBhhhh', timeStamp, timeStampNano, rsAngle, lsAngle, rtAngle, ltAngle, trunkAngle, rmEnc, lmEnc, rmCurrentReadout, lmCurrentReadout, rmCurrentSent, lmCurrentSent, analog0, analog1, analog2, analog3, syncIn, syncOut, usrButton, leftEnable, rightEnable, dummy1, dummy2)
-
+            structData = struct.pack('!iiiiiiihhHHHHHHHHBBBhhhh', timeStamp, timeStampNano, rsAngle, lsAngle, rtAngle, ltAngle, trunkAngle, rmEnc, lmEnc, rmCurrentReadout, lmCurrentReadout, rmCurrentSent, lmCurrentSent, analog0, analog1, analog2, analog3, syncIn, syncOut, usrButton, leftEnable, rightEnable, dummy1, dummy2)
+            print("/n")
+            print (len(structData))
+            print(structData)
+            print("/n")
             conn.sendall(structData)

@@ -22,7 +22,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("myoswiss")
 
         self.setStyleSheet("background-color: white")
-  
+
         # Creating widgets. 
         self.createSettingsFrame()
         self.createPlottingAreaWidget()

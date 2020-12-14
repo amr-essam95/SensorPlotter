@@ -25,6 +25,11 @@ class SocketCommunicator(QObject):
 		# Any data sent to ssock shows up on rsock
 		self.rsock, self.ssock = socket.socketpair()
 
+	def closeConnection(self):
+
+		if self.socketConnectionSucceeded:
+			self.socketConnection.close()
+
 	def connect(self):
 		try:
 			self.socketConnectionSucceeded = True
@@ -51,10 +56,10 @@ class SocketCommunicator(QObject):
 			rlist, _, _ = select.select([self.socketConnection, self.rsock], [], [])
 			for ready_socket in rlist:
 				if ready_socket is self.socketConnection:
-					data = self.socketConnection.recv(60)
+					data = self.socketConnection.recv(59)
 					if not data: continue
 					try:
-						structList = struct.unpack("iiiiiiihhHHHHHHHHBBBhhhh",data)
+						structList = struct.unpack("!iiiiiiihhHHHHHHHHBBBhhhh",data)
 						self.dataReady.emit(list(structList))
 						self.labelDataReady.emit(structList[17], structList[19])
 					except struct.error as error:

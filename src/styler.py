@@ -145,6 +145,51 @@ class Styler:
 			}
 		"""
 
+		self.rxLegendBox = """
+			QFrame {
+				border: none;
+				background-color: rgb(0,0,0);
+			}
+		"""
+
+		self.rxLegendLabel = """
+			QFrame {
+				border: none;
+				color: rgb(0,0,0);
+				font-size: 13px;
+			}
+		"""
+
+		self.lxLegendBox = """
+			QFrame {
+				border: none;
+				background-color: rgb(44,90,160);
+			}
+		"""
+
+		self.lxLegendLabel = """
+			QFrame {
+				border: none;
+				color: rgb(44,90,160);
+				font-size: 13px;
+			}
+		"""
+
+		self.trunkLegendBox = """
+			QFrame {
+				border: none;
+				background-color: rgb(170,0,0);
+			}
+		"""
+
+		self.trunkLegendLabel = """
+			QFrame {
+				border: none;
+				color: rgb(170,0,0);
+				font-size: 13px;
+			}
+		"""
+
 		self.blackPen = pg.mkPen(color=(0,0,0))
 		self.blackDottedPen = pg.mkPen(color=(0,0,0), style=QtCore.Qt.DashLine)
 		self.bluePen = pg.mkPen(color=(44,90,160))
