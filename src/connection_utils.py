@@ -14,8 +14,8 @@ class SocketCommunicator(QObject):
 
 	def __init__(self, parent=None):
 		super(SocketCommunicator, self).__init__(parent)
-		# self.hostname = '192.168.7.2'
-		self.hostname = '127.0.0.1'
+		self.hostname = '192.168.7.2'
+		# self.hostname = '127.0.0.1'
 		self.port = 6666
 		self.socketConnection = ''
 		self.socketConnectionSucceeded = False
@@ -56,10 +56,12 @@ class SocketCommunicator(QObject):
 			rlist, _, _ = select.select([self.socketConnection, self.rsock], [], [])
 			for ready_socket in rlist:
 				if ready_socket is self.socketConnection:
-					data = self.socketConnection.recv(59)
+					# data = self.socketConnection.recv(59)
+					data = self.socketConnection.recv(56)
 					if not data: continue
 					try:
-						structList = struct.unpack("!iiiiiiihhHHHHHHHHBBBhhhh",data)
+						# structList = struct.unpack("iiiiiiihhHHHHHHHHBBBhhhh",data)
+						structList = struct.unpack("iiiiiiihhhhhhhhhhBBBhh",data)
 						self.dataReady.emit(list(structList))
 						self.labelDataReady.emit(structList[17], structList[19])
 					except struct.error as error:
