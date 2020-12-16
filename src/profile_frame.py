@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QFrame, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit
+from PyQt5.QtWidgets import QFrame, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QFileDialog
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QIcon
 
@@ -77,7 +77,7 @@ class ProfileFrame(QFrame):
 		blackColor = (0,0,0)
 
 		self.profilePlot.setBackground('w')
-		self.profilePlot.setTitle("<span style=\"color:black; font-size:15pt\">Profile Plot</span>")
+		self.profilePlot.setTitle("")
 
 		styles = {'color':'rgba(0,0,0,1)', 'font-size':'15px'}
 		self.profilePlot.getAxis('left').setPen(color=blackColor)
