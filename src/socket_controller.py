@@ -34,6 +34,12 @@ class SocketController(QObject):
 		# Fill header list for the log file.
 		self.fillLogHeaderList()
 
+		self.createThreadsForSocketCommunication()
+
+		parent.destroyed.connect(self.onParentDestroyed)
+
+	def createThreadsForSocketCommunication(self):
+
 		# Create new thread for handling socket communication.
 		self.socketCommunicator = SocketCommunicator()
 		self.thread = QThread(self)
@@ -46,8 +52,6 @@ class SocketController(QObject):
 		self.updaterThread.setTerminationEnabled(True)
 		self.plotUpdater.moveToThread(self.updaterThread)
 
-		parent.destroyed.connect(self.onParentDestroyed)
-
 		self.streamData.connect(self.socketCommunicator.receiveData)
 		self.connectToSocket.connect(self.socketCommunicator.connect)
 		self.thread.start()
@@ -57,8 +61,14 @@ class SocketController(QObject):
 
 		self.markerStateChanged.connect(self.plotUpdater.onMarkerStateChanged)
 		self.updaterThread.start()
-		
+
+	def resetConnection(self):
+
+		self.socketCommunicator.stopReceivingData()
+
 	def onParentDestroyed(self):
+
+		self.socketCommunicator.stopReceivingData()
 
 		self.socketCommunicator = None
 		self.plotUpdater = None
@@ -163,7 +173,7 @@ class SocketController(QObject):
 			participantId = "file"
 		logFileName = 'log_{}'.format(participantId)
 		logFilePath = os.path.join(directoryPath, logFileName)
-		
+
 		with open(logFilePath, mode='w') as logFile:
 
 			logFile.write("{}\n".format(participantId))

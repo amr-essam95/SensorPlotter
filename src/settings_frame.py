@@ -32,6 +32,9 @@ class SettingsFrame(QFrame):
 		self.logLineEdit = ""
 		self.logDirPath = ""
 
+		self.connectIcon = QIcon("resources/connect.png")
+		self.disconnectIcon = QIcon("resources/disconnect.png")
+
 		self.markerState = 0
 		self.connectionOpened = False
 		self.streaming = False
@@ -59,12 +62,11 @@ class SettingsFrame(QFrame):
 		logoLabelLayout.setContentsMargins(2,2,2,2)
 		logoLabelLayout.addWidget(logoLabel)
 
-		connectIcon = QIcon("resources/connect.png")
 		self.connectButton = QPushButton("  Connect")
 		self.connectButton.setToolTip("Connect to the server")
 		self.connectButton.setStyleSheet(self.styler.buttonStyle)
 		self.connectButton.clicked.connect(self.onConnectButtonClicked)
-		self.connectButton.setIcon(connectIcon)
+		self.connectButton.setIcon(self.connectIcon)
 
 		streamIcon = QIcon("resources/stream.png")
 		self.streamButton = QPushButton("  Stream")
@@ -264,17 +266,26 @@ class SettingsFrame(QFrame):
 		self.connectionOpened = status
 		if (self.connectionOpened):
 			self.connectionStatusLabel.setText("Status: Connected")
-			self.connectButton.setEnabled(False)
 			self.streamButton.setEnabled(True)
+
+			self.connectButton.setText("  Disconnect")
+			self.connectButton.setToolTip("Disconnect")
+			self.connectButton.setIcon(self.disconnectIcon)
 		else:
 			self.connectionStatusLabel.setText("Status: No connection")
 			self.addMessageToLogger("Connection failed to the server.")
-			self.connectButton.setEnabled(True)
 			self.streamButton.setEnabled(False)
+
+			self.connectButton.setText("  Connect")
+			self.connectButton.setToolTip("Connect to the server")
+			self.connectButton.setIcon(self.connectIcon)
 
 	def onConnectButtonClicked(self):
 
-		self.socketController.startConnection()
+		if self.connectionOpened:
+			self.socketController.resetConnection()
+		else:
+			self.socketController.startConnection()
 
 	def onStreamButtonClicked(self):
 

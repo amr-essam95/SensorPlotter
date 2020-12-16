@@ -20,15 +20,33 @@ class SocketCommunicator(QObject):
 		self.socketConnection = ''
 		self.socketConnectionSucceeded = False
 
+		self.running = False
+		self.lock = threading.Lock()
+
 		# Any data received by this queue will be sent
 		self.send_queue = queue.Queue()
 		# Any data sent to ssock shows up on rsock
 		self.rsock, self.ssock = socket.socketpair()
 
-	def closeConnection(self):
-
+	def clearData(self):
 		if self.socketConnectionSucceeded:
 			self.socketConnection.close()
+			self.socketConnection = ''
+			self.socketConnectionSucceeded = False
+			self.send_queue = queue.Queue()
+			self.rsock, self.ssock = socket.socketpair()
+			self.connectionStatusChanged.emit(False)
+
+
+	def stopReceivingData(self):
+
+		with self.lock:
+			if self.running == True:
+				# In case we're receiving data stop the thread loop.
+				self.running = False
+			else:
+				# In case we haven't started receiving data, clear and emit connection closed.
+				self.clearData()
 
 	def connect(self):
 		try:
@@ -51,16 +69,28 @@ class SocketCommunicator(QObject):
 			print ("Connection is closed, please connect first.")
 
 	def receiveData(self):
+
+		with self.lock:
+			self.running = True
+
 		while True:
+			with self.lock:
+				if self.running == False:
+					# End receiving data.
+					self.clearData()
+					return
+
 			# When either socket has data or rsock has data, select.select will return
 			rlist, _, _ = select.select([self.socketConnection, self.rsock], [], [])
 			for ready_socket in rlist:
 				if ready_socket is self.socketConnection:
-					# data = self.socketConnection.recv(59)
-					data = self.socketConnection.recv(56)
+					try:
+						data = self.socketConnection.recv(56)
+					except:
+						self.clearData()
+						return
 					if not data: continue
 					try:
-						# structList = struct.unpack("iiiiiiihhHHHHHHHHBBBhhhh",data)
 						structList = struct.unpack("iiiiiiihhhhhhhhhhBBBhh",data)
 						self.dataReady.emit(list(structList))
 						self.labelDataReady.emit(structList[17], structList[19])
