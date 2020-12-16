@@ -1,5 +1,6 @@
 from PyQt5.QtCore import Qt, QObject, pyqtSignal, QThread
 import sys
+import os
 import csv
 import struct
 import threading
@@ -156,9 +157,14 @@ class SocketController(QObject):
 			"Marker State"
 		]
 
-	def logData(self, participantId):
+	def logData(self, participantId, directoryPath):
 
-		with open('log_{}'.format(participantId), mode='w') as logFile:
+		if participantId == "":
+			participantId = "file"
+		logFileName = 'log_{}'.format(participantId)
+		logFilePath = os.path.join(directoryPath, logFileName)
+		
+		with open(logFilePath, mode='w') as logFile:
 
 			logFile.write("{}\n".format(participantId))
 			logWriter = csv.writer(logFile, delimiter='\t')

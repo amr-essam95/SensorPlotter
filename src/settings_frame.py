@@ -1,7 +1,8 @@
-from PyQt5.QtWidgets import QFrame, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPlainTextEdit, QSlider
+from PyQt5.QtWidgets import QFrame, QFileDialog, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPlainTextEdit, QSlider
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QColor, QIntValidator, QPixmap, QIcon
 import sys
+import os
 sys.path.append(".")
 from styler import Styler
 from profile_frame import ProfileFrame
@@ -29,6 +30,7 @@ class SettingsFrame(QFrame):
 		self.participantIdLineEdit = ""
 		self.setMarkerButton = ""
 		self.logLineEdit = ""
+		self.logDirPath = ""
 
 		self.markerState = 0
 		self.connectionOpened = False
@@ -118,21 +120,21 @@ class SettingsFrame(QFrame):
 		self.participantIdLineEdit.setStyleSheet(self.styler.lineEditStyle)
 		self.participantIdLineEdit.setPlaceholderText("Participant Id")
 
-		logFileLabel = QLabel("Log File Path")
-		logFileLabel.setMaximumHeight(15)
-		logFileLabel.setMinimumHeight(15)
-		logFileLabel.setStyleSheet(self.styler.labelStyle)
+		logDirLabel = QLabel("Log Dir Path")
+		logDirLabel.setMaximumHeight(15)
+		logDirLabel.setMinimumHeight(15)
+		logDirLabel.setStyleSheet(self.styler.labelStyle)
 
 		self.logLineEdit = QLineEdit()
 		self.logLineEdit.setStyleSheet(self.styler.browseLineEditStyle)
-		self.logLineEdit.setPlaceholderText("Log File Path")
+		self.logLineEdit.setPlaceholderText("Log Dir Path")
 		self.logLineEdit.setEnabled(False)
 
 		browseIcon = QIcon("resources/browse.png")
 		browseButton = QPushButton()
 		browseButton.setIcon(browseIcon)
 		browseButton.setIconSize(QSize(30,30))
-		# browseButton.clicked.connect(self.onBrowseButtonClicked)
+		browseButton.clicked.connect(self.onBrowseButtonClicked)
 
 		lineEditLayout = QHBoxLayout()
 		lineEditLayout.setContentsMargins(0,0,0,0)
@@ -143,10 +145,10 @@ class SettingsFrame(QFrame):
 		lineEditFrame.setLayout(lineEditLayout)
 		lineEditFrame.setStyleSheet(self.styler.browseLineEditFrame)
 
-		logFileLayout = QVBoxLayout()
-		logFileLayout.setContentsMargins(0,0,0,0)
-		logFileLayout.addWidget(logFileLabel)
-		logFileLayout.addWidget(lineEditFrame)
+		logDirLayout = QVBoxLayout()
+		logDirLayout.setContentsMargins(0,0,0,0)
+		logDirLayout.addWidget(logDirLabel)
+		logDirLayout.addWidget(lineEditFrame)
 
 		logIcon = QIcon("resources/log.png")
 		logButton = QPushButton("  Log")
@@ -158,7 +160,7 @@ class SettingsFrame(QFrame):
 		loggingSettingsLayout = QVBoxLayout()
 		loggingSettingsLayout.addWidget(participantIdLabel)
 		loggingSettingsLayout.addWidget(self.participantIdLineEdit)
-		loggingSettingsLayout.addLayout(logFileLayout)
+		loggingSettingsLayout.addLayout(logDirLayout)
 		loggingSettingsLayout.addStretch()
 		loggingSettingsLayout.addWidget(logButton)
 
@@ -314,7 +316,7 @@ class SettingsFrame(QFrame):
 
 	def onLogButtonClicked(self):
 		participantId = self.participantIdLineEdit.text().strip()
-		self.socketController.logData(participantId)
+		self.socketController.logData(participantId, self.logDirPath)
 
 	def magnitudeLxInputChanged(self, value):
 		
@@ -331,3 +333,10 @@ class SettingsFrame(QFrame):
 		else:
 			value = int(value)
 		self.magnitudeRxSlider.setValue(value)
+
+	def onBrowseButtonClicked(self):
+
+		logDirPath = QFileDialog.getExistingDirectory(self, "Select Log Filre Directory", ".", QFileDialog.ShowDirsOnly)
+		if logDirPath:
+			self.logLineEdit.setText(logDirPath)
+			self.logDirPath = logDirPath
