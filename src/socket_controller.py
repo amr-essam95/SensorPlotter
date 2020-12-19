@@ -18,6 +18,10 @@ class SocketController(QObject):
 	markerStateChanged = pyqtSignal(int)
 
 	def __init__(self, parent=None):
+		"""
+			Class for handling sockets, plotting data and logging data.
+		"""
+
 		super(SocketController, self).__init__(parent)
 
 		self.enableState = 0

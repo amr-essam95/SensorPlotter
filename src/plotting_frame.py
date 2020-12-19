@@ -10,6 +10,9 @@ import pyqtgraph as pg
 
 class PlottingFrame(QFrame): 
 	def __init__(self, socketController, parent=None): 
+		"""
+			Class for the plots.
+		"""
 		super().__init__()
 
 		self.anglePlotsFrame = ""

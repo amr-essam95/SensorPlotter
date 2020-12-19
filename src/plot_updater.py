@@ -10,8 +10,12 @@ import threading
 class PlotUpdater(QObject):
 
 	def __init__(self, socketCommunicator, parent=None):
+
+		# This class updates the plots in different thread to be able to handle data every 10ms.
+
 		super(PlotUpdater, self).__init__(parent)
 
+		# Flag to determine whether we've reached the max points to draw or not.
 		self.removeFirstElement = False
 
 		self.receivedData = list()
@@ -19,6 +23,9 @@ class PlotUpdater(QObject):
 		self.markerState = 0
 		
 		self.time = []
+
+		# Max number of points to draw.
+		self.numberOfPointsToPlot = 400
 
 		self.thighPlot = ""
 		self.rtLine = ""
@@ -87,7 +94,7 @@ class PlotUpdater(QObject):
 		analog2 = structList[15]
 		analog3 = structList[16]
 
-		if (len(self.time) > 30):
+		if (len(self.time) > self.numberOfPointsToPlot):
 			self.removeFirstElement = True
 		
 		if (self.removeFirstElement):

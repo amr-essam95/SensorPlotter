@@ -8,18 +8,27 @@ import queue
 
 class SocketCommunicator(QObject):
 
+	# Signal for the state of the connection.
 	connectionStatusChanged = pyqtSignal(bool)
+	# Signal for the data to be plotted.
 	dataReady = pyqtSignal(list)
+	# Signal for the sunc and user buttons.
 	labelDataReady = pyqtSignal(bool, bool)
 
 	def __init__(self, parent=None):
+		"""
+			This class handles the socket communication in a different thread to be
+			able to handle data every 10 ms and emit a signal with the new data.
+		"""
+
 		super(SocketCommunicator, self).__init__(parent)
-		# self.hostname = '192.168.7.2'
-		self.hostname = '127.0.0.1'
+		self.hostname = '192.168.7.2'
+		# self.hostname = '127.0.0.1'
 		self.port = 6666
 		self.socketConnection = ''
 		self.socketConnectionSucceeded = False
 
+		# Flag to stop receiving data.
 		self.running = False
 		self.lock = threading.Lock()
 
@@ -29,6 +38,7 @@ class SocketCommunicator(QObject):
 		self.rsock, self.ssock = socket.socketpair()
 
 	def clearData(self):
+		# Close socket connection and clear data to be able to connect again.
 		if self.socketConnectionSucceeded:
 			self.socketConnection.close()
 			self.socketConnection = ''
@@ -39,7 +49,7 @@ class SocketCommunicator(QObject):
 
 
 	def stopReceivingData(self):
-
+		# This method stops receiving data.
 		with self.lock:
 			if self.running == True:
 				# In case we're receiving data stop the thread loop.
@@ -87,6 +97,7 @@ class SocketCommunicator(QObject):
 					try:
 						data = self.socketConnection.recv(56)
 					except:
+						# If connection is closed.
 						self.clearData()
 						return
 					if not data: continue
